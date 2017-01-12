@@ -49,8 +49,16 @@ public class AttendanceContract {
 
         public static final String TABLE_EVENTS = "EventsTable";
 
+        /*Values for column_eventType*/
+        public static final int TYPE_LECTURE = 0;
+        public static final int TYPE_PRACTICAL = 1;
+        public static final int TYPE_SEMINAR = 2;
+        public static final int TYPE_WORKSHOP = 3;
+        public static final int TYPE_EXAM = 3;
+
         public static final String column_userId = "userId";
         public static final String column_eventId = "eventId";
+        public static final String column_eventType = "eventType";
         public static final String column_eventName = "eventName";
         public static final String column_numOfParticipants = "numberOfParticipants";
         public static final String column_numOfInstances = "numberOfInstances";
@@ -106,9 +114,9 @@ public class AttendanceContract {
 
         /*Values for column_attendanceType*/
         public static final int TYPE_PRESENT = 0;
-        public static final int TYPE_ABSENT=1;
-        public static final int TYPE_UNAVAILABLE=2;
-        public static final int TYPE_MEDICAL_LEAVE=3;
+        public static final int TYPE_ABSENT = 1;
+        public static final int TYPE_UNAVAILABLE = 2;
+        public static final int TYPE_MEDICAL_LEAVE = 3;
 
         public static final String column_instanceId = "instanceId";
         public static final String column_eventId = "eventId";

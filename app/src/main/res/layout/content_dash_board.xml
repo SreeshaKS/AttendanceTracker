@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.sreesha.android.attendancetracker.DashBoard"
+    tools:context="com.sreesha.android.attendancetracker.DashBoardClasses.DashBoard"
     tools:showIn="@layout/activity_dash_board">
 
 </android.support.v4.widget.NestedScrollView>

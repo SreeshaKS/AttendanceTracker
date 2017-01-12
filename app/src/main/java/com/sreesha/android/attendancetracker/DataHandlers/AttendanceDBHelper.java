@@ -8,11 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by Sreesha on 08-01-2017.
  */
 
-public class AttendanceDataDBHelper extends SQLiteOpenHelper {
+public class AttendanceDBHelper extends SQLiteOpenHelper {
+
     private static final String DATABASE_NAME = "attendanceData.db";
     private static final int DATABASE_VERSION = 0;
 
-    public AttendanceDataDBHelper(Context context) {
+
+
+    public AttendanceDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
