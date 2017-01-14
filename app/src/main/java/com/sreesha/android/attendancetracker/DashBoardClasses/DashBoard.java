@@ -1,7 +1,10 @@
 package com.sreesha.android.attendancetracker.DashBoardClasses;
 
+import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -11,11 +14,20 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.sreesha.android.attendancetracker.DataHandlers.AttendanceContract;
+import com.sreesha.android.attendancetracker.DataHandlers.Event;
 import com.sreesha.android.attendancetracker.R;
-
 import java.util.ArrayList;
+import java.util.Date;
 
 public class DashBoard extends AppCompatActivity
         implements EventsFragment.OnFragmentInteractionListener
@@ -29,23 +41,128 @@ public class DashBoard extends AppCompatActivity
     AttendanceFragment mAttendanceFragment;
     EventsFragment mEventsFragment;
     StatisticsFragment mStatisticsFragment;
+    FloatingActionButton fab;
+
+    EditText mEventNameEditText;
+    String eventName = null;
+
+    RadioGroup mEventTypeRadioGroup;
+    int eventType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                int position = mTabLayout.getSelectedTabPosition();
+
+                switch (position) {
+                    case 0:
+                        break;
+                    case 1:
+                        showEventAdditionDialog();
+                        break;
+                    case 2:
+                        break;
+                }
             }
         });
         initializeViewElements();
+    }
+
+    MaterialDialog createEventDialog;
+
+    void showEventAdditionDialog() {
+        createEventDialog = new MaterialDialog.Builder(this)
+                .title("Create an Event")
+                .customView(R.layout.event_creation_dialog_form, false)
+                .positiveText(android.R.string.ok)
+                .negativeText(android.R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        eventName = (
+                                (EditText) dialog
+                                        .getCustomView()
+                                        .findViewById(R.id.eventNameEditText)
+                        )
+                                .getText()
+                                .toString();
+
+                        if (eventName.isEmpty()) {
+                            Toast.makeText(getBaseContext()
+                                    , R.string.event_name_cannot_be_empty
+                                    , Toast.LENGTH_SHORT)
+                                    .show();
+                        } else {
+                            Log.d("Android ID", Settings.Secure.ANDROID_ID);
+                            java.sql.Timestamp timestamp = new java.sql.Timestamp(new Date().getTime());
+                            Event newEvent = new Event(
+                                    String.valueOf(
+                                            (eventName + timestamp.toString())
+                                                    .hashCode()
+                                    )
+                                    , null
+                                    , eventName
+                                    , eventType, 0, 0, timestamp.toString()
+                            );
+                            ContentValues v = Event.getContentValues(newEvent);
+                            Uri uri = getContentResolver().insert(
+                                    AttendanceContract.Events.CONTENT_URI
+                                    , v
+                            );
+                            if (uri != null)
+                                Log.d("Insertion", "Uri : " + uri.toString());
+                            else
+                                Log.d("Insertion", "Bad insertion");
+
+                        }
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                    }
+                }).build();
+        mEventTypeRadioGroup = (RadioGroup) createEventDialog
+                .getCustomView()
+                .findViewById(R.id.eventTypeRadioGroup);
+        mEventTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                RadioButton checkedButton
+                        = (RadioButton) createEventDialog.getCustomView().findViewById(checkedId);
+
+                if (checkedButton.isChecked()) {
+                    switch (checkedButton.getText().toString()) {
+                        case "Lecture":
+                            eventType = AttendanceContract.Events.TYPE_LECTURE;
+                            break;
+                        case "Practical":
+                            eventType = AttendanceContract.Events.TYPE_PRACTICAL;
+                            break;
+                        case "Seminar":
+                            eventType = AttendanceContract.Events.TYPE_SEMINAR;
+                            break;
+                        case "Workshop":
+                            eventType = AttendanceContract.Events.TYPE_WORKSHOP;
+                            break;
+                        case "Exam":
+                            eventType = AttendanceContract.Events.TYPE_EXAM;
+                            break;
+                    }
+                }
+            }
+        });
+        createEventDialog.show();
     }
 
     private void initializeViewElements() {
@@ -56,8 +173,12 @@ public class DashBoard extends AppCompatActivity
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
 
-
+        initializeListeners();
         setupViewPager(mViewPager);
+    }
+
+    private void initializeListeners() {
+
     }
 
     @Override
@@ -77,6 +198,13 @@ public class DashBoard extends AppCompatActivity
             @Override
             public void onPageSelected(int position) {
                 switch (position) {
+                    case 0:
+                        break;
+                    case 1:
+
+                        break;
+                    case 2:
+                        break;
                 }
             }
 
@@ -84,6 +212,7 @@ public class DashBoard extends AppCompatActivity
             public void onPageScrollStateChanged(int state) {
             }
         });
+
         mAdapter = new Adapter(getSupportFragmentManager());
         /*TODO:Add FragmentClasses Here*/
         mAdapter.addFragment(mAttendanceFragment, getString(R.string.attendance_tab_title));
@@ -93,6 +222,7 @@ public class DashBoard extends AppCompatActivity
 
         //mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.getTabAt(1).select();
     }
 
     class Adapter extends FragmentPagerAdapter {

@@ -1,6 +1,7 @@
 package com.sreesha.android.attendancetracker.DataHandlers;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -9,7 +10,7 @@ import android.provider.BaseColumns;
  */
 
 public class AttendanceContract {
-    public static final String CONTENT_AUTHORITY = "com.sreesha.android.moviebuzz";
+    public static final String CONTENT_AUTHORITY = "com.sreesha.android.attendancetracker";
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
@@ -36,6 +37,10 @@ public class AttendanceContract {
         public static final String column_userEmail = "userEmail";
         public static final String column_isAdmin = "isAdmin";
         public static final String column_linkToProfile = "profileLink";
+
+        public static Uri buildUserUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
     }
 
     public static final class Events implements BaseColumns {
@@ -54,7 +59,7 @@ public class AttendanceContract {
         public static final int TYPE_PRACTICAL = 1;
         public static final int TYPE_SEMINAR = 2;
         public static final int TYPE_WORKSHOP = 3;
-        public static final int TYPE_EXAM = 3;
+        public static final int TYPE_EXAM = 4;
 
         public static final String column_userId = "userId";
         public static final String column_eventId = "eventId";
@@ -62,6 +67,11 @@ public class AttendanceContract {
         public static final String column_eventName = "eventName";
         public static final String column_numOfParticipants = "numberOfParticipants";
         public static final String column_numOfInstances = "numberOfInstances";
+        public static final String column_creationDate = "dateOfCreation";
+
+        public static Uri buildEventsUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
     }
 
     public static final class EventAssociation implements BaseColumns {
