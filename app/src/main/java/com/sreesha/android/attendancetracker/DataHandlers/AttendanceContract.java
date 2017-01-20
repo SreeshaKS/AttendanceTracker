@@ -14,11 +14,11 @@ public class AttendanceContract {
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-    public static final String PATH_USERS = "users";
-    public static final String PATH_EVENTS = "events";
-    public static final String PATH_EVENT_ASSOCIATION = "eventAssociation";
-    public static final String PATH_EVENT_INSTANCE = "eventInstance";
-    public static final String PATH_INSTANCE_ATTENDANCE = "attendanceInstance";
+    public static final String PATH_USERS = "usersPath";
+    public static final String PATH_EVENTS = "eventsPath";
+    public static final String PATH_EVENT_ASSOCIATION = "eventAssociationPath";
+    public static final String PATH_EVENT_INSTANCE = "eventInstancePath";
+    public static final String PATH_INSTANCE_ATTENDANCE = "attendanceInstancePath";
 
     public static final class Users implements BaseColumns {
 
@@ -104,10 +104,15 @@ public class AttendanceContract {
 
         public static final String column_instanceId = "instanceId";
         public static final String column_eventId = "eventId";
-        public static final String column_date = "date";
+        public static final String column_creationTimeStamp = "creationTimeStamp";
         public static final String column_duration = "duration";
-        public static final String column_hour = "hour";
+        public static final String column_startTimeStamp = "startTimeStamp";
+        public static final String column_endTimeStamp = "endTimeStamp";
         public static final String column_note = "note";
+
+        public static Uri buildEventInstanceUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
     }
 
     public static final class InstanceAttendance implements BaseColumns {

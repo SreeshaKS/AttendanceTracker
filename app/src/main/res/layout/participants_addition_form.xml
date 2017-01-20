@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/formTitleTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:text="University Identifier Prefix"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/usnPrefixET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/formTitleTV"
+        android:layout_centerHorizontal="true"
+        android:hint="USN Prefix" />
+
+    <TextView
+        android:id="@+id/randTitleTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/usnPrefixET"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:text="Enter The Roll Number Range"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/usnRangeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/randTitleTV"
+        android:layout_margin="10dp"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/usnStartRangeET"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:hint="From "
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/hyphenTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_toEndOf="@+id/usnStartRangeET"
+            android:layout_toRightOf="@+id/usnStartRangeET"
+            android:text=" -> "
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/usnEndRangeET"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_toEndOf="@+id/hyphenTextView"
+            android:layout_toRightOf="@+id/hyphenTextView"
+            android:gravity="center"
+            android:hint="To"
+            android:inputType="number" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/usnRangeLayout"
+        android:layout_margin="30dp"
+        android:gravity="center"
+        android:text="@string/participants_form_message" />
+
+</RelativeLayout>

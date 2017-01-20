@@ -1,6 +1,7 @@
 package com.sreesha.android.attendancetracker.DashBoardClasses;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ public class EventsFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    public static final String EVENT_OBJECT_PARCELABLE_KEY = "eventParcelableStringKey";
 
     private String mParam1;
     private String mParam2;
@@ -53,9 +56,13 @@ public class EventsFragment extends Fragment {
         getLoaderManager().initLoader(EVENTS_LOADER_ID, null, loaderCallBacks);
     }
 
+    boolean isStateRestored = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null)
+            isStateRestored = true;
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -65,7 +72,8 @@ public class EventsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        if (isStateRestored)
+            getLoaderManager().initLoader(EVENTS_LOADER_ID, null, loaderCallBacks);
     }
 
     @Override
@@ -80,13 +88,32 @@ public class EventsFragment extends Fragment {
     private void initializeViewElements(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.eventsRecyclerView);
         initializeRecyclerView();
+        initializeListeners();
     }
+
 
     private void initializeRecyclerView() {
         mEventsAdapter = new EventsRVAdapter(getActivity(), null);
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mEventsAdapter);
+    }
+
+    private void initializeListeners() {
+        mEventsAdapter.setCustomOnClickListener(new EventsRVAdapter.CustomOnClickListener() {
+            @Override
+            public void onClick(View view, int position, Event attendanceEvent) {
+                Intent intent = new Intent(getActivity(), InstanceCreationActivity.class);
+                intent.putExtra(EVENT_OBJECT_PARCELABLE_KEY, attendanceEvent);
+                startActivity(intent);
+            }
+        });
+        mEventsAdapter.setCustomOnLongClickListener(new EventsRVAdapter.CustomOnLongClickListener() {
+            @Override
+            public void onLongClick(View view, int position, Event attendanceEvent) {
+                //TODO : Inflate Appropriate toolbar menu items !
+            }
+        });
     }
 
     @Override
@@ -125,7 +152,7 @@ public class EventsFragment extends Fragment {
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             if (data != null)
                 Log.d("Loader", "onLoadFinished" + data.getCount());
-            else{
+            else {
                 Log.d("Loader", "onLoadFinished : Null Data");
             }
             mEventsAdapter.swapCursor(data);

@@ -187,8 +187,6 @@ public class DashBoard extends AppCompatActivity
     }
 
     private void setupViewPager(ViewPager viewPager) {
-
-
         viewPager.setOffscreenPageLimit(3);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class AttendanceDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "attendanceData.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 12;
 
 
     public AttendanceDBHelper(Context context) {
@@ -24,10 +24,10 @@ public class AttendanceDBHelper extends SQLiteOpenHelper {
                 = "Create Table " +
                 AttendanceContract.Users.TABLE_USERS
                 + "( "
-                +AttendanceContract.Users._ID
-                + " integer  , "
+                + AttendanceContract.Users._ID
+                + " integer primary key autoincrement, "
                 + AttendanceContract.Users.column_userId
-                + " integer primary key autoincrement , "
+                + " text , "
                 + AttendanceContract.Users.column_userName
                 + " text , "
                 + AttendanceContract.Users.column_userEmail
@@ -35,15 +35,15 @@ public class AttendanceDBHelper extends SQLiteOpenHelper {
                 + AttendanceContract.Users.column_linkToProfile
                 + " text , "
                 + AttendanceContract.Users.column_isAdmin
-                + " boolean )";
+                + " boolean , " + " UNIQUE ( "+ AttendanceContract.Users.column_userId +" ) )";
         final String SQL_CREATE_EVENTS_TABLE
                 = "Create Table " +
                 AttendanceContract.Events.TABLE_EVENTS
                 + "( "
-                +AttendanceContract.Events._ID
-                + " integer  , "
+                + AttendanceContract.Events._ID
+                + " integer primary key autoincrement , "
                 + AttendanceContract.Events.column_userId
-                + " integer , "
+                + " text , "
                 + AttendanceContract.Events.column_eventId
                 + " text , "
                 + AttendanceContract.Events.column_creationDate
@@ -59,20 +59,85 @@ public class AttendanceDBHelper extends SQLiteOpenHelper {
                 + "foreign key( " + AttendanceContract.Events.column_userId + " ) "
                 + " references "
                 + AttendanceContract.Users.TABLE_USERS + " ( " + AttendanceContract.Users.column_userId + " ) "
-                + " , primary key ( "
+                + " , unique ( "
                 + AttendanceContract.Events.column_userId
                 + " , "
                 + AttendanceContract.Events.column_eventId + " ) ) ";
+
+        final String SQL_CREATE_EVENT_INSTANCE_TABLE = "Create Table "
+                + AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE
+                + " ( "
+                + AttendanceContract.EventInstance._ID
+                + " integer primary key autoincrement , "
+                + AttendanceContract.EventInstance.column_instanceId
+                + " text , "
+                + AttendanceContract.EventInstance.column_eventId
+                + " text , "
+                + AttendanceContract.EventInstance.column_creationTimeStamp
+                + " text , "
+                + AttendanceContract.EventInstance.column_startTimeStamp
+                + " text , "
+                + AttendanceContract.EventInstance.column_endTimeStamp
+                + " text , "
+                + AttendanceContract.EventInstance.column_duration
+                + " integer , "
+                + AttendanceContract.EventInstance.column_note
+                + " text , "
+                + " foreign key( " + AttendanceContract.EventInstance.column_eventId + " ) "
+                + " references "
+                + AttendanceContract.Events.TABLE_EVENTS + " ( " + AttendanceContract.Events.column_eventId + " ) "
+                + " , unique ( "
+                + AttendanceContract.EventInstance.column_eventId
+                + " , "
+                + AttendanceContract.EventInstance.column_instanceId + " ) ) ";
+        final String SQL_CREATE_INSTANCE_ATTENDANCE = "Create Table "
+                + AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE
+                + " ( "
+                + AttendanceContract.InstanceAttendance._ID
+                + " integer primary key autoincrement , "
+                + AttendanceContract.InstanceAttendance.column_instanceId
+                + " text , "
+                + AttendanceContract.InstanceAttendance.column_eventId
+                + " text , "
+                + AttendanceContract.InstanceAttendance.column_userId
+                + " text , "
+                + AttendanceContract.InstanceAttendance.column_attendanceType
+                + " integer , "
+                + AttendanceContract.InstanceAttendance.column_isLate
+                + " integer , "
+                + AttendanceContract.EventInstance.column_note
+                + " text , "
+                + " foreign key( " + AttendanceContract.InstanceAttendance.column_eventId + " ) "
+                + " references "
+                + AttendanceContract.Events.TABLE_EVENTS + " ( " + AttendanceContract.Events.column_eventId + " ) , "
+                + " foreign key( " + AttendanceContract.InstanceAttendance.column_instanceId + " ) "
+                + " references "
+                + AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE + " ( " + AttendanceContract.EventInstance.column_instanceId + " ) , "
+                + " foreign key( " + AttendanceContract.InstanceAttendance.column_userId + " ) "
+                + " references "
+                + AttendanceContract.Users.TABLE_USERS + " ( " + AttendanceContract.Users.column_userId + " ) "
+                + " , unique ( "
+                + AttendanceContract.InstanceAttendance.column_eventId
+                + " , "
+                + AttendanceContract.InstanceAttendance.column_instanceId
+                + " , "
+                + AttendanceContract.InstanceAttendance.column_userId + " ) "
+                +  " ) ";
+
+
         db.execSQL(SQL_CREATE_USERS_TABLE);
         db.execSQL(SQL_CREATE_EVENTS_TABLE);
+        db.execSQL(SQL_CREATE_EVENT_INSTANCE_TABLE);
+        db.execSQL(SQL_CREATE_INSTANCE_ATTENDANCE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        db.execSQL(" DROP TABLE IF EXISTS " + AttendanceContract.Events.TABLE_EVENTS);
         db.execSQL(" DROP TABLE IF EXISTS " + AttendanceContract.Users.TABLE_USERS);
-
+        db.execSQL(" DROP TABLE IF EXISTS " + AttendanceContract.Events.TABLE_EVENTS);
+        db.execSQL(" DROP TABLE IF EXISTS " + AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE);
+        db.execSQL(" DROP TABLE IF EXISTS " + AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE);
         onCreate(db);
     }
 }

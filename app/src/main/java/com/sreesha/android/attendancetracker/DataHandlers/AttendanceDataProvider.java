@@ -4,7 +4,11 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -23,6 +27,8 @@ public class AttendanceDataProvider extends ContentProvider {
 
     public static final int USERS = 10;
     public static final int EVENTS = 11;
+    public static final int INSTANCE_EVENT = 12;
+    public static final int INSTANCE_ATTENDANCE = 13;
 
     static {
         sAttendanceBuilder = new SQLiteQueryBuilder();
@@ -38,6 +44,8 @@ public class AttendanceDataProvider extends ContentProvider {
         //TODO:Add Uris to be recognized
         matcher.addURI(authority, AttendanceContract.PATH_USERS, USERS);
         matcher.addURI(authority, AttendanceContract.PATH_EVENTS, EVENTS);
+        matcher.addURI(authority, AttendanceContract.PATH_EVENT_INSTANCE, INSTANCE_EVENT);
+        matcher.addURI(authority, AttendanceContract.PATH_INSTANCE_ATTENDANCE, INSTANCE_ATTENDANCE);
         return matcher;
     }
 
@@ -70,6 +78,26 @@ public class AttendanceDataProvider extends ContentProvider {
                                 selection,
                                 selectionArgs, null, null, sortOrder);
                 break;
+            case INSTANCE_EVENT:
+                Log.d("Loader", "Querying Event Instance Table");
+                retCursor = mOpenHelper
+                        .getReadableDatabase()
+                        .query(AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE,
+                                projection,
+                                selection,
+                                selectionArgs, null, null, sortOrder);
+
+                break;
+            case INSTANCE_ATTENDANCE:
+                Log.d("Loader", "Querying Event Instance Table");
+                retCursor = mOpenHelper
+                        .getReadableDatabase()
+                        .query(AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE,
+                                projection,
+                                selection,
+                                selectionArgs, null, null, sortOrder);
+
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -98,6 +126,10 @@ public class AttendanceDataProvider extends ContentProvider {
             case EVENTS:
                 Log.d("Loader", "Events Matched");
                 return AttendanceContract.Events.CONTENT_TYPE;
+            case INSTANCE_EVENT:
+                return AttendanceContract.EventInstance.CONTENT_TYPE;
+            case INSTANCE_ATTENDANCE:
+                return AttendanceContract.InstanceAttendance.CONTENT_TYPE;
         }
         return null;
     }
@@ -107,14 +139,23 @@ public class AttendanceDataProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues contentValues) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
-        Uri returnUri;
+        Uri returnUri = null;
         switch (match) {
             case USERS: {
-                long _id = db.insert(AttendanceContract.Users.TABLE_USERS, null, contentValues);
-                if (_id > 0) {
-                    returnUri = AttendanceContract.Users.buildUserUri(_id);
-                } else {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                try {
+                    long _id = -1;
+                    _id = db.insert(AttendanceContract.Users.TABLE_USERS, null, contentValues);
+
+                    if (_id > 0) {
+                        returnUri = AttendanceContract.Users.buildUserUri(_id);
+                    } else {
+                        throw new android.database.SQLException("Failed to insert row into " + uri);
+                    }
+                } catch (SQLiteException e) {
+                    e.printStackTrace();
+                } catch (SQLException sqlE) {
+                    sqlE.printStackTrace();
+                    Log.e("SQLExceptionLog", "Unique ConstraintFailed , User Already Exists");
                 }
                 break;
             }
@@ -124,6 +165,29 @@ public class AttendanceDataProvider extends ContentProvider {
                     returnUri = AttendanceContract.Events.buildEventsUri(_id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+            }
+            case INSTANCE_EVENT: {
+                long _id = db.insert(AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE, null, contentValues);
+                if (_id > 0) {
+                    returnUri = AttendanceContract.Events.buildEventsUri(_id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+            }
+            case INSTANCE_ATTENDANCE: {
+                try {
+                    long _id = db.insert(AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE, null, contentValues);
+                    if (_id > 0) {
+                        returnUri = AttendanceContract.Events.buildEventsUri(_id);
+                    } else {
+                        throw new android.database.SQLException("Failed to insert row into " + uri);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    Log.d("SQLException", "INSTANCE Attendance , Unique Constraint Failed , User Already Exists");
                 }
                 break;
             }
@@ -150,6 +214,14 @@ public class AttendanceDataProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         AttendanceContract.Events.TABLE_EVENTS, selection, selectionArgs);
                 break;
+            case INSTANCE_EVENT:
+                rowsDeleted = db.delete(
+                        AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE, selection, selectionArgs);
+                break;
+            case INSTANCE_ATTENDANCE:
+                rowsDeleted = db.delete(
+                        AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -164,7 +236,7 @@ public class AttendanceDataProvider extends ContentProvider {
     public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
-        int rowsUpdated;
+        int rowsUpdated = 0;
 
         switch (match) {
             case USERS:
@@ -174,6 +246,29 @@ public class AttendanceDataProvider extends ContentProvider {
             case EVENTS:
                 rowsUpdated = db.update(AttendanceContract.Events.TABLE_EVENTS, contentValues, selection,
                         selectionArgs);
+                break;
+            case INSTANCE_EVENT:
+                rowsUpdated = db.update(AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE
+                        , contentValues
+                        , selection
+                        , selectionArgs);
+                break;
+            case INSTANCE_ATTENDANCE:
+                try {
+                    rowsUpdated =
+                            db.update(
+                                    AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE
+                                    , contentValues
+                                    , selection
+                                    , selectionArgs
+                            );
+
+                    Log.d("Thread", "RowsUpdated Num : " + rowsUpdated);
+                } catch (SQLiteException e) {
+                    Log.d("Thread", "Exception Raised" + e.getMessage());
+                    //TODO : Investigate this exception triggered from @link{AttendanceAdapter}
+                    e.printStackTrace();
+                }
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
