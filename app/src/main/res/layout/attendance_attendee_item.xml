@@ -1,142 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/event_item_cardView"
+    android:id="@+id/backGroundLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    app:cardCornerRadius="2dp">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/event_item_cardView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="2dp">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/instanceDetailsCard"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/colorPrimary">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <RelativeLayout
+            <android.support.v7.widget.CardView
+                android:id="@+id/instanceDetailsCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top">
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/profileImageCard"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_margin="10dp"
-                    app:cardCornerRadius="25dp">
-
-                    <ImageView
-                        android:id="@+id/userProfileIV"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop" />
-                </android.support.v7.widget.CardView>
+                app:cardBackgroundColor="@color/colorPrimary">
 
                 <RelativeLayout
-                    android:id="@+id/userDetailLayout"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_toEndOf="@+id/profileImageCard"
-                    android:layout_toRightOf="@+id/profileImageCard"
-                    android:gravity="center">
+                    android:layout_gravity="top">
 
-                    <TextView
-                        android:id="@+id/userIDTV"
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/profileImageCard"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_margin="10dp"
+                        app:cardCornerRadius="25dp">
+
+                        <ImageView
+                            android:id="@+id/userProfileIV"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+                    </android.support.v7.widget.CardView>
+
+                    <RelativeLayout
+                        android:id="@+id/userDetailLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="User ID"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
+                        android:layout_margin="10dp"
+                        android:layout_toEndOf="@+id/profileImageCard"
+                        android:layout_toRightOf="@+id/profileImageCard"
+                        android:gravity="center">
 
-                    <TextView
-                        android:id="@+id/userNameTV"
+                        <TextView
+                            android:id="@+id/userIDTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="User ID"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/userNameTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/userIDTV"
+                            android:text="User Name"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/isLateLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/userIDTV"
-                        android:text="User Name"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
+                        android:layout_centerVertical="true"
+                        android:layout_margin="10dp"
+                        android:layout_toEndOf="@+id/userDetailLayout"
+                        android:layout_toRightOf="@+id/userDetailLayout"
+                        android:gravity="center">
 
+                        <CheckBox
+                            android:id="@+id/isLateCheckBox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginStart="20dp"
+                            android:hint="Is Late" />
+
+                        <Button
+                            android:id="@+id/noteButton"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_toEndOf="@+id/isLateCheckBox"
+                            android:layout_toRightOf="@+id/isLateCheckBox"
+                            android:background="@drawable/note_button_selector"
+                            android:gravity="center" />
+                    </RelativeLayout>
                 </RelativeLayout>
+            </android.support.v7.widget.CardView>
 
-                <RelativeLayout
-                    android:id="@+id/isLateLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="10dp"
-                    android:gravity="center">
-
-                    <CheckBox
-                        android:id="@+id/isLateCheckBox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/noteButton"
-                        android:layout_margin="5dp"
-                        android:hint="Is Late" />
-
-                    <Button
-                        android:id="@+id/noteButton"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_margin="5dp"
-                        android:background="@drawable/note_button_selector"
-                        android:gravity="center" />
-                </RelativeLayout>
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/instanceDetailsCard"
-            android:layout_margin="5dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/instanceDetailsCard"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
 
-            <Button
-                android:id="@+id/presentIV"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/present_button_selector" />
+                <Button
+                    android:id="@+id/presentIV"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/present_button_selector" />
 
 
-            <Button
-                android:id="@+id/absentIV"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
+                <Button
+                    android:id="@+id/absentIV"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginRight="20dp"
 
-                android:background="@drawable/absent_button_selector" />
+                    android:background="@drawable/absent_button_selector" />
 
-            <Button
-                android:id="@+id/unknownIV"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/unkown_button_selector" />
+                <Button
+                    android:id="@+id/unknownIV"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/unkown_button_selector" />
 
-            <Button
-                android:id="@+id/medicalIV"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="@drawable/medical_button_selector" />
-        </LinearLayout>
-    </RelativeLayout>
-</android.support.v7.widget.CardView>
+                <Button
+                    android:id="@+id/medicalIV"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/medical_button_selector" />
+            </LinearLayout>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

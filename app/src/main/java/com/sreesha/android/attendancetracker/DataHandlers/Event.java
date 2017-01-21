@@ -10,7 +10,7 @@ import android.os.Parcelable;
  */
 
 public class Event implements Parcelable {
-    public static final String timeStamp_pattern = "yyyy-mm-dd hh:mm:ss.[fff...]";
+    public static final String timeStamp_pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS";
     private String eventId;
     private String userId;
     private String eventName;
@@ -82,6 +82,10 @@ public class Event implements Parcelable {
 
     public void setNumberOfInstances(long numOfInstances) {
         this.numberOfInstances = numOfInstances;
+    }
+
+    public void setNumberOfParticipants(long numOfParticipants) {
+        this.numOfParticipants = numOfParticipants;
     }
 
     public static ContentValues getContentValues(Event event) {

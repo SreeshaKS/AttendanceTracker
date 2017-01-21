@@ -21,12 +21,80 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top">
+                android:layout_gravity="top|center_horizontal">
+
+                <TextView
+                    android:id="@+id/eventNameTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:text="Event Name"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:id="@+id/participantNumLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/eventNameTV"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="5dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/numParticipantsTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="2dp"
+                        android:gravity="center"
+                        android:text="23"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/participantIV"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_margin="2dp"
+                        android:layout_toEndOf="@+id/numParticipantsTV"
+                        android:layout_toRightOf="@+id/numParticipantsTV"
+                        android:src="@drawable/ic_account_multiple_white_36dp" />
+
+
+                    <ImageView
+                        android:id="@+id/calIV"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="2dp"
+                        android:layout_toEndOf="@+id/participantIV"
+                        android:layout_toRightOf="@+id/participantIV"
+                        android:src="@drawable/ic_calendar_clock_white_36dp" />
+
+                    <TextView
+                        android:id="@+id/creationDateTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="2dp"
+                        android:layout_toEndOf="@+id/calIV"
+                        android:layout_toRightOf="@+id/calIV"
+                        android:gravity="bottom|end"
+                        android:text="January 15th , 2011"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
 
                 <LinearLayout
                     android:id="@+id/durationLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/participantNumLayout"
                     android:layout_margin="5dp"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal"
@@ -48,7 +116,7 @@
                         android:gravity="center"
                         android:text="January 15th , 2011"
                         android:textColor="@color/white"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -71,68 +139,9 @@
                         android:gravity="center"
                         android:text="January 15th , 2011"
                         android:textColor="@color/white"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                 </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/participantNumLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/durationLayout"
-                    android:layout_margin="5dp"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/numParticipantsTV"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_margin="2dp"
-                        android:gravity="center"
-                        android:text="23"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:id="@+id/participantIV"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_margin="2dp"
-                        android:layout_toRightOf="@+id/numParticipantsTV"
-                        android:src="@drawable/ic_account_multiple_white_36dp" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/creationDateLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/participantNumLayout"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="5dp"
-                    android:gravity="bottom">
-
-                    <ImageView
-                        android:id="@+id/calIV"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_margin="2dp"
-                        android:src="@drawable/ic_calendar_clock_white_36dp" />
-
-                    <TextView
-                        android:id="@+id/creationDateTV"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_toRightOf="@+id/calIV"
-                        android:gravity="bottom|end"
-                        android:text="January 15th , 2011"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
 
 
             </RelativeLayout>
@@ -154,12 +163,12 @@
                 android:layout_weight="12.5"
                 android:gravity="center"
                 android:text="25"
-                android:textSize="20sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_weight="12.5"
                 android:src="@drawable/ic_check_circle_outline_grey600_36dp" />
 
@@ -170,12 +179,12 @@
                 android:layout_weight="12.5"
                 android:gravity="center"
                 android:text="25"
-                android:textSize="20sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_weight="12.5"
                 android:src="@drawable/ic_close_circle_outline_grey600_36dp" />
 
@@ -186,12 +195,12 @@
                 android:layout_weight="12.5"
                 android:gravity="center"
                 android:text="25"
-                android:textSize="20sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_weight="12.5"
                 android:src="@drawable/ic_help_circle_grey600_36dp" />
 
@@ -202,12 +211,12 @@
                 android:layout_weight="12.5"
                 android:gravity="center"
                 android:text="25"
-                android:textSize="20sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_weight="12.5"
                 android:src="@drawable/medical_button_selector" />
         </LinearLayout>

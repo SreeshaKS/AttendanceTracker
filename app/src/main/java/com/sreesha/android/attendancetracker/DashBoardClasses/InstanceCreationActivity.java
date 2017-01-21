@@ -2,6 +2,7 @@ package com.sreesha.android.attendancetracker.DashBoardClasses;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,7 +25,9 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.sreesha.android.attendancetracker.AttendanceApplication;
 import com.sreesha.android.attendancetracker.DataHandlers.AttendanceContract;
+import com.sreesha.android.attendancetracker.DataHandlers.AttendanceDBHelper;
 import com.sreesha.android.attendancetracker.DataHandlers.Event;
 import com.sreesha.android.attendancetracker.DataHandlers.EventInstance;
 import com.sreesha.android.attendancetracker.R;
@@ -38,7 +41,8 @@ import java.util.Calendar;
 public class InstanceCreationActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
     private static final int INSTANCE_LOADER_ID = 999;
-
+    private static final String SELECTED_INSTANCE_ID_KEY = "selectedInstanceIDKey";
+    private static final String SELECTED_EVENT_ID_KEY = "selectedEventIDKey";
     private Event event;
 
     /**
@@ -66,12 +70,15 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
 
     private RecyclerView mEventInstanceRV;
     private EInstanceRVAdapter mEventInstanceAdapter;
+    boolean isStateRestored = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instance_creation);
-
+        if (savedInstanceState != null) {
+            isStateRestored = true;
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         mCoOrdLayout = (CoordinatorLayout) findViewById(R.id.coOrdLayout);
@@ -97,12 +104,25 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
         getSupportLoaderManager().initLoader(INSTANCE_LOADER_ID, null, loaderCallBacks);
     }
 
+
     private void initializeListeners() {
         mEventInstanceAdapter.setCustomOnClickListener(new EInstanceRVAdapter.CustomOnClickListener() {
             @Override
             public void onClick(View view, int position, EventInstance eventInstance) {
                 Log.d("InstanceCreation", eventInstance.getInstanceID());
+                AttendanceApplication
+                        .getSharedPreferences(InstanceCreationActivity.this)
+                        .edit()
+                        .putString(SELECTED_INSTANCE_ID_KEY, eventInstance.getInstanceID())
+                        .apply();
+                AttendanceApplication
+                        .getSharedPreferences(InstanceCreationActivity.this)
+                        .edit()
+                        .putString(SELECTED_EVENT_ID_KEY, eventInstance.getEventID())
+                        .apply();
+
                 Intent i = new Intent(InstanceCreationActivity.this, AttendanceActivity.class);
+
                 i.putExtra(EventInstance.EVENT_INSTANCE_PARCELABLE_KEY, eventInstance);
                 startActivity(i);
             }
@@ -149,6 +169,7 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
                                     = new EventInstance(
                                     String.valueOf((event.getEventId() + timeStamp).hashCode())
                                     , event.getEventId()
+                                    , event.getEventName()
                                     , timeStamp
                                     , startTimeStamp
                                     , endTimeStamp
@@ -353,5 +374,47 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
             Toast.makeText(getBaseContext(), "Please set the date Field First", Toast.LENGTH_SHORT)
                     .show();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSupportLoaderManager().restartLoader(INSTANCE_LOADER_ID, null, loaderCallBacks);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AttendanceDBHelper mOpenHelper = new AttendanceDBHelper(InstanceCreationActivity.this);
+
+        Cursor c = participantCountQueryFunction(mOpenHelper);
+        long p = 0;
+        if (c.moveToFirst()) {
+            p = c.getLong(c.getColumnIndex(c.getColumnName(0)));
+        }
+
+        ContentValues cV = new ContentValues();
+        cV.put(AttendanceContract.Events.column_numOfParticipants, p);
+        getContentResolver()
+                .update(AttendanceContract.Events.CONTENT_URI
+                        , cV
+                        , AttendanceContract.Events.column_eventId + " = ? "
+                        , new String[]{event.getEventId()}
+                );
+    }
+
+    private Cursor participantCountQueryFunction(AttendanceDBHelper mOpenHelper) {
+        return mOpenHelper
+                .getReadableDatabase()
+                .query(AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE,
+                        new String[]{" COUNT( DISTINCT(" + AttendanceContract.InstanceAttendance.column_userId + " ) ) "}
+                        , AttendanceContract.InstanceAttendance.column_eventId + " = ? "
+                        , new String[]{
+                                event.getEventId()
+                        }
+                        , null
+                        , null
+                        , null
+                );
     }
 }

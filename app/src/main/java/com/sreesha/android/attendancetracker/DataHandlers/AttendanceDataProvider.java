@@ -5,10 +5,8 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -29,6 +27,8 @@ public class AttendanceDataProvider extends ContentProvider {
     public static final int EVENTS = 11;
     public static final int INSTANCE_EVENT = 12;
     public static final int INSTANCE_ATTENDANCE = 13;
+    public static final int PARTICIPANTS_COUNT = 14;
+    public static final int EVENT_INSTANCE_SUMMARY = 15;
 
     static {
         sAttendanceBuilder = new SQLiteQueryBuilder();
@@ -46,6 +46,8 @@ public class AttendanceDataProvider extends ContentProvider {
         matcher.addURI(authority, AttendanceContract.PATH_EVENTS, EVENTS);
         matcher.addURI(authority, AttendanceContract.PATH_EVENT_INSTANCE, INSTANCE_EVENT);
         matcher.addURI(authority, AttendanceContract.PATH_INSTANCE_ATTENDANCE, INSTANCE_ATTENDANCE);
+        matcher.addURI(authority, AttendanceContract.PATH_PARTICIPANTS_COUNT, PARTICIPANTS_COUNT);
+        matcher.addURI(authority, AttendanceContract.PATH_EVENT_INSTANCE_SUMMARY, EVENT_INSTANCE_SUMMARY);
         return matcher;
     }
 
@@ -98,6 +100,24 @@ public class AttendanceDataProvider extends ContentProvider {
                                 selectionArgs, null, null, sortOrder);
 
                 break;
+            case PARTICIPANTS_COUNT:
+                Log.d("Loader", "Querying Event Instance Table");
+                retCursor = mOpenHelper
+                        .getReadableDatabase()
+                        .query(AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE,
+                                projection,
+                                selection,
+                                selectionArgs
+                                , null
+                                , null
+                                , sortOrder
+                        );
+
+                break;
+            case EVENT_INSTANCE_SUMMARY:
+
+                retCursor = null;
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -112,6 +132,7 @@ public class AttendanceDataProvider extends ContentProvider {
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return retCursor;
     }
+
 
     @Nullable
     @Override

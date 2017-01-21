@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class AttendanceDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "attendanceData.db";
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 15;
 
 
     public AttendanceDBHelper(Context context) {
@@ -73,6 +73,8 @@ public class AttendanceDBHelper extends SQLiteOpenHelper {
                 + " text , "
                 + AttendanceContract.EventInstance.column_eventId
                 + " text , "
+                + AttendanceContract.EventInstance.column_eventName
+                + " text , "
                 + AttendanceContract.EventInstance.column_creationTimeStamp
                 + " text , "
                 + AttendanceContract.EventInstance.column_startTimeStamp
@@ -83,6 +85,14 @@ public class AttendanceDBHelper extends SQLiteOpenHelper {
                 + " integer , "
                 + AttendanceContract.EventInstance.column_note
                 + " text , "
+                + AttendanceContract.EventInstance.column_type0Count
+                + " integer , "
+                + AttendanceContract.EventInstance.column_type1Count
+                + " integer , "
+                + AttendanceContract.EventInstance.column_type2Count
+                + " integer , "
+                + AttendanceContract.EventInstance.column_type3Count
+                + " integer , "
                 + " foreign key( " + AttendanceContract.EventInstance.column_eventId + " ) "
                 + " references "
                 + AttendanceContract.Events.TABLE_EVENTS + " ( " + AttendanceContract.Events.column_eventId + " ) "
@@ -133,11 +143,8 @@ public class AttendanceDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(" ALTER TABLE " + AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE
+        +" ADD COLUMN "+AttendanceContract.EventInstance.column_eventName);
 
-        db.execSQL(" DROP TABLE IF EXISTS " + AttendanceContract.Users.TABLE_USERS);
-        db.execSQL(" DROP TABLE IF EXISTS " + AttendanceContract.Events.TABLE_EVENTS);
-        db.execSQL(" DROP TABLE IF EXISTS " + AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE);
-        db.execSQL(" DROP TABLE IF EXISTS " + AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE);
-        onCreate(db);
     }
 }

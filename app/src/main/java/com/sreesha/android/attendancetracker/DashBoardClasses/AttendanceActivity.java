@@ -2,9 +2,11 @@ package com.sreesha.android.attendancetracker.DashBoardClasses;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.CursorLoader;
@@ -22,7 +24,9 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.sreesha.android.attendancetracker.AttendanceApplication;
 import com.sreesha.android.attendancetracker.DataHandlers.AttendanceContract;
+import com.sreesha.android.attendancetracker.DataHandlers.AttendanceDBHelper;
 import com.sreesha.android.attendancetracker.DataHandlers.AttendanceInstance;
 import com.sreesha.android.attendancetracker.DataHandlers.Event;
 import com.sreesha.android.attendancetracker.DataHandlers.EventInstance;
@@ -36,9 +40,12 @@ import java.util.Calendar;
 
 public class AttendanceActivity extends AppCompatActivity {
     EventInstance mEventInstance;
+    Event mCallingEventObject;
+
     RecyclerView mAttendanceRV;
     AttendanceAdapter mAdapter;
     private static final int ATTENDANCE_LOADER_ID = 1000;
+    private static final int EVENT_LOADER_ID = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,7 @@ public class AttendanceActivity extends AppCompatActivity {
 
         mAttendanceRV = (RecyclerView) findViewById(R.id.attendanceRV);
         initializeRecyclerView();
+        initialiseListeners();
         handleIntent();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +66,9 @@ public class AttendanceActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        getSupportLoaderManager().initLoader(EVENT_LOADER_ID, null, loaderCallBacks);
         getSupportLoaderManager().initLoader(ATTENDANCE_LOADER_ID, null, loaderCallBacks);
+
     }
 
     private void initializeRecyclerView() {
@@ -67,20 +77,58 @@ public class AttendanceActivity extends AppCompatActivity {
         mAttendanceRV.setAdapter(mAdapter);
     }
 
+    boolean shouldInflateSelectionMenu = false;
+
+    void initialiseListeners() {
+        mAdapter.registerSelectionEventNotifier(new AttendanceAdapter.SelectionEventNotifier() {
+            @Override
+            public void OnSelectionEventTriggered(int count) {
+                if (countMenuItem != null) {
+                    countMenuItem.setTitle(String.valueOf(count));
+                }
+            }
+
+            @Override
+            public void OnSelectionStateChanged(boolean isInSelectionMode) {
+                if (isInSelectionMode) {
+                    shouldInflateSelectionMenu = true;
+                    invalidateOptionsMenu();
+                } else {
+                    shouldInflateSelectionMenu = false;
+                    invalidateOptionsMenu();
+                }
+            }
+
+            @Override
+            public void OnSelectedDeleteRequestComplete() {
+                getSupportLoaderManager().restartLoader(ATTENDANCE_LOADER_ID, null, loaderCallBacks);
+            }
+        });
+    }
+
     private void handleIntent() {
         mEventInstance = getIntent().getParcelableExtra(EventInstance.EVENT_INSTANCE_PARCELABLE_KEY);
     }
 
     Menu activityMenu = null;
+    MenuItem countMenuItem;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_attendance_activity, menu);
-        if (areParticipantsAdded)
-            menu.getItem(1).setIcon(R.drawable.ic_account_edit_white_36dp);
-        else
-            menu.getItem(1).setIcon(R.drawable.ic_account_multiple_plus_white_36dp);
 
+        if (!shouldInflateSelectionMenu) {
+            getMenuInflater().inflate(R.menu.menu_attendance_activity, menu);
+            if (areParticipantsAdded)
+                menu.getItem(1).setIcon(R.drawable.ic_account_edit_white_36dp);
+            else
+                menu.getItem(1).setIcon(R.drawable.ic_account_multiple_plus_white_36dp);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_attendance_selection, menu);
+            Log.d("MenuItem", "Size : " + menu.size());
+
+            countMenuItem = menu.findItem(R.id.countParticipantsMenu);
+
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -95,21 +143,25 @@ public class AttendanceActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.addParticipantsMenu: {
                 if (!areParticipantsAdded) {
-                    createAndShowParticipantsAdditionDialog();
+                    createAndShowParticipantsAdditionDialog(" ");
                 } else {
-                    createAndShowParticipantsEditDialog();
+                    createAndShowParticipantsAdditionDialog("Add New Users");
                 }
+            }
+            break;
+            case R.id.deleteParticipantsMenu: {
+                mAdapter.notifySelectionDeleteRequest(AttendanceActivity.this);
             }
             break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void createAndShowParticipantsAdditionDialog() {
+    private void createAndShowParticipantsAdditionDialog(String title) {
         MaterialDialog participantFormDialog
 
                 = new MaterialDialog.Builder(AttendanceActivity.this)
-                .title("")
+                .title(title)
                 .customView(R.layout.participants_addition_form, false)
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
@@ -173,28 +225,6 @@ public class AttendanceActivity extends AppCompatActivity {
         participantFormDialog.show();
     }
 
-    private void createAndShowParticipantsEditDialog() {
-        MaterialDialog participantFormDialog
-
-                = new MaterialDialog.Builder(AttendanceActivity.this)
-                .title("")
-                .customView(R.layout.participants_addition_form, false)
-                .positiveText(android.R.string.ok)
-                .negativeText(android.R.string.cancel)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                    }
-                }).build();
-        participantFormDialog.show();
-    }
-
     private class AsyncParticipantAccumulator extends AsyncTask<String, String, String> {
         IAccumulatorResultCallBack resultCallback;
         String usnPrefix;
@@ -248,6 +278,17 @@ public class AttendanceActivity extends AppCompatActivity {
                                                 )
                                         ));
             }
+            if (mCallingEventObject != null) {
+                mCallingEventObject.setNumberOfParticipants(
+                        mCallingEventObject.getNumOfParticipants() + endRange - startRange
+                );
+                getContentResolver()
+                        .update(AttendanceContract.Events.CONTENT_URI
+                                , Event.getContentValues(mCallingEventObject)
+                                , AttendanceContract.Events.column_eventId + " = ? "
+                                , new String[]{mEventInstance.getEventID()}
+                        );
+            }
             return null;
         }
 
@@ -265,15 +306,31 @@ public class AttendanceActivity extends AppCompatActivity {
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             mProgressDialog = Utility.getMaterialProgressDialog("Loading Users", "Please Wait", AttendanceActivity.this);
-            return new CursorLoader(
-                    getBaseContext()
-                    , AttendanceContract.InstanceAttendance.CONTENT_URI
-                    , null
-                    , AttendanceContract.InstanceAttendance.column_eventId + " = ? AND "
-                    + AttendanceContract.InstanceAttendance.column_instanceId + " = ? "
-                    , new String[]{mEventInstance.getEventID(), mEventInstance.getInstanceID()}
-                    , null
-            );
+            switch (id) {
+                case ATTENDANCE_LOADER_ID:
+                    return new CursorLoader(
+                            getBaseContext()
+                            , AttendanceContract.InstanceAttendance.CONTENT_URI
+                            , null
+                            , AttendanceContract.InstanceAttendance.column_eventId + " = ? AND "
+                            + AttendanceContract.InstanceAttendance.column_instanceId + " = ? "
+                            , new String[]{mEventInstance.getEventID(), mEventInstance.getInstanceID()}
+                            , null
+                    );
+
+                case EVENT_LOADER_ID:
+
+                    return new CursorLoader(
+                            getBaseContext()
+                            , AttendanceContract.Events.CONTENT_URI
+                            , null
+                            , AttendanceContract.InstanceAttendance.column_eventId + " = ? "
+                            , new String[]{mEventInstance.getEventID()}
+                            , null
+                    );
+                default:
+                    return null;
+            }
         }
 
         @Override
@@ -281,16 +338,25 @@ public class AttendanceActivity extends AppCompatActivity {
             if (mProgressDialog != null && !mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
             }
-            if (data.getCount() > 0) {
-                Log.d("Thread", "Swapping cursor");
-                areParticipantsAdded = true;
-                invalidateOptionsMenu();
-                Log.d("InstanceActivity", "Count" + data.getCount());
-                mAdapter.swapCursor(data);
-            } else {
-                areParticipantsAdded = false;
-                invalidateOptionsMenu();
+            switch (loader.getId()) {
+                case ATTENDANCE_LOADER_ID:
+                    if (data.getCount() > 0) {
+                        Log.d("Thread", "Swapping cursor");
+                        areParticipantsAdded = true;
+                        invalidateOptionsMenu();
+                        Log.d("InstanceActivity", "Count" + data.getCount());
+                        mAdapter.swapCursor(data);
+                    } else {
+                        areParticipantsAdded = false;
+                        invalidateOptionsMenu();
+                    }
+                    break;
+                case EVENT_LOADER_ID:
+                    data.moveToFirst();
+                    mCallingEventObject = Event.getEventFromCursor(data);
+                    break;
             }
+
         }
 
         @Override
@@ -308,5 +374,58 @@ public class AttendanceActivity extends AppCompatActivity {
         super.onStop();
         mAdapter.stopJobCruncher();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AttendanceDBHelper mOpenHelper = new AttendanceDBHelper(AttendanceActivity.this);
+        Cursor c = queryFunction(0, mOpenHelper);
+        long t0 = 0, t1 = 0, t2 = 0, t3 = 0;
+        c.moveToFirst();
+        t0 = c.getLong(c.getColumnIndex(c.getColumnName(0)));
+        c = queryFunction(1, mOpenHelper);
+        if (c.moveToFirst())
+            t1 = c.getLong(c.getColumnIndex(c.getColumnName(0)));
+        c = queryFunction(2, mOpenHelper);
+        if (c.moveToFirst())
+            t2 = c.getLong(c.getColumnIndex(c.getColumnName(0)));
+        c = queryFunction(3, mOpenHelper);
+        if (c.moveToFirst())
+            t3 = c.getLong(c.getColumnIndex(c.getColumnName(0)));
+        ContentValues cV = new ContentValues();
+        cV.put(AttendanceContract.EventInstance.column_type0Count, t0);
+        cV.put(AttendanceContract.EventInstance.column_type1Count, t1);
+        cV.put(AttendanceContract.EventInstance.column_type2Count, t2);
+        cV.put(AttendanceContract.EventInstance.column_type3Count, t3);
+        mOpenHelper
+                .getReadableDatabase()
+                .update(
+                        AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE
+                        , cV
+                        , AttendanceContract.EventInstance.column_eventId + " = ? AND "
+                                + AttendanceContract.EventInstance.column_instanceId + " = ? "
+
+                        , new String[]{mEventInstance.getEventID(), mEventInstance.getInstanceID()}
+                );
+    }
+
+    private Cursor queryFunction(int type, AttendanceDBHelper mOpenHelper) {
+        return mOpenHelper
+                .getReadableDatabase()
+                .query(AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE,
+                        new String[]{" COUNT( " + AttendanceContract.InstanceAttendance.column_attendanceType + " ) "}
+                        , AttendanceContract.InstanceAttendance.column_eventId + " = ? AND "
+                                + AttendanceContract.InstanceAttendance.column_instanceId + " = ? AND "
+                                + AttendanceContract.InstanceAttendance.column_attendanceType + " = ? "
+                        , new String[]{
+                                mEventInstance.getEventID()
+                                , mEventInstance.getInstanceID()
+                                , String.valueOf(type)
+                        }
+                        , null
+                        , null
+                        , null
+                );
     }
 }

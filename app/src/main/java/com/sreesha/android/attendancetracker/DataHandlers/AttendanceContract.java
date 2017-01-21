@@ -20,6 +20,9 @@ public class AttendanceContract {
     public static final String PATH_EVENT_INSTANCE = "eventInstancePath";
     public static final String PATH_INSTANCE_ATTENDANCE = "attendanceInstancePath";
 
+    public static final String PATH_PARTICIPANTS_COUNT = "participantsCountPath";
+    public static final String PATH_EVENT_INSTANCE_SUMMARY = "eventInstanceSummary";
+
     public static final class Users implements BaseColumns {
 
         public static final Uri CONTENT_URI =
@@ -109,6 +112,12 @@ public class AttendanceContract {
         public static final String column_startTimeStamp = "startTimeStamp";
         public static final String column_endTimeStamp = "endTimeStamp";
         public static final String column_note = "note";
+        public static final String column_eventName = "eventName";
+
+        public static final String column_type0Count="type0Count";
+        public static final String column_type1Count="type1Count";
+        public static final String column_type2Count="type2Count";
+        public static final String column_type3Count="type3Count";
 
         public static Uri buildEventInstanceUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -139,5 +148,7 @@ public class AttendanceContract {
         public static final String column_attendanceType = "attendanceType";
         public static final String column_isLate = "isLate";
         public static final String column_note = "note";
+
+
     }
 }

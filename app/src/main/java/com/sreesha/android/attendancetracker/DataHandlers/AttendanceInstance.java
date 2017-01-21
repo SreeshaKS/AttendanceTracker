@@ -10,12 +10,12 @@ import android.os.Parcelable;
  */
 
 public class AttendanceInstance implements Parcelable {
-    String userID;
-    String eventID;
-    String instanceID;
-    int attendanceType;
-    int isLate;
-    String note;
+    private String userID;
+    private String eventID;
+    private String instanceID;
+    private int attendanceType;
+    private int isLate;
+    private String note;
 
     public AttendanceInstance(String userID, String eventID, String instanceID, int attendanceType, int isLate, String note) {
         this.userID = userID;
@@ -118,5 +118,10 @@ public class AttendanceInstance implements Parcelable {
                 , cursor.getInt(cursor.getColumnIndex(AttendanceContract.InstanceAttendance.column_isLate))
                 , cursor.getString(cursor.getColumnIndex(AttendanceContract.InstanceAttendance.column_note))
         );
+    }
+
+    @Override
+    public String toString() {
+        return (eventID + instanceID + attendanceType + userID + isLate + note);
     }
 }

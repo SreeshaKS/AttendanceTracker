@@ -74,6 +74,9 @@ public class EventsFragment extends Fragment {
         super.onResume();
         if (isStateRestored)
             getLoaderManager().initLoader(EVENTS_LOADER_ID, null, loaderCallBacks);
+        else{
+            getLoaderManager().restartLoader(EVENTS_LOADER_ID, null, loaderCallBacks);
+        }
     }
 
     @Override

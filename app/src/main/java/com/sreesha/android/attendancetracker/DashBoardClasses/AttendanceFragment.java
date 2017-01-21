@@ -1,6 +1,7 @@
 package com.sreesha.android.attendancetracker.DashBoardClasses;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -72,6 +73,16 @@ public class AttendanceFragment extends Fragment {
     }
 
     private void initializeListeners() {
+        combinedAtAdapter.setCustomOnClickListener(
+                new CustomOnClickListener() {
+                    @Override
+                    public void onClick(View view, int position, EventInstance eventInstance) {
+                        Intent i = new Intent(getActivity(), AttendanceActivity.class);
+                        i.putExtra(EventInstance.EVENT_INSTANCE_PARCELABLE_KEY, eventInstance);
+                        startActivity(i);
+                    }
+                }
+        );
     }
 
     private void initializeRecyclerView() {
@@ -165,6 +176,23 @@ public class AttendanceFragment extends Fragment {
             holder.endDateTV.setText(Utility.getFormattedTimeStamp(instance.getEndTimeStamp()));
 
             holder.creationDateTV.setText(Utility.getFormattedTimeStamp(instance.getCreationTimeStamp()));
+
+            holder.creationDateTV.setText(Utility.getFormattedTimeStamp(instance.getCreationTimeStamp()));
+            holder.presentNumTV.setText(String.valueOf(instance.getType0Count()));
+            holder.absentNumTV.setText(String.valueOf(instance.getType1Count()));
+            holder.unkownNumTV.setText(String.valueOf(instance.getType2Count()));
+            holder.medicalNumTV.setText(String.valueOf(instance.getType3Count()));
+
+            holder.numParticipantTV
+                    .setText(
+                            String.valueOf(
+                                    instance.getType0Count()
+                                            + instance.getType1Count()
+                                            + instance.getType2Count()
+                                            + instance.getType3Count()
+                            )
+                    );
+            holder.eventNameTV.setText(instance.getEventName());
         }
 
         class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -178,6 +206,7 @@ public class AttendanceFragment extends Fragment {
             TextView unkownNumTV;
             TextView medicalNumTV;
 
+            TextView eventNameTV;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -185,6 +214,7 @@ public class AttendanceFragment extends Fragment {
                 endDateTV = (TextView) itemView.findViewById(R.id.endTimeTV);
                 numParticipantTV = (TextView) itemView.findViewById(R.id.numParticipantsTV);
                 creationDateTV = (TextView) itemView.findViewById(R.id.creationDateTV);
+                eventNameTV = (TextView) itemView.findViewById(R.id.eventNameTV);
 
                 presentNumTV = (TextView) itemView.findViewById(R.id.presentTV);
                 absentNumTV = (TextView) itemView.findViewById(R.id.absentTV);
@@ -217,11 +247,11 @@ public class AttendanceFragment extends Fragment {
             }
         }
 
-        void setCustomOnClickListener(CustomOnClickListener listener) {
+        public void setCustomOnClickListener(CustomOnClickListener listener) {
             this.mClickListener = listener;
         }
 
-        void setCustomOnLongClickListener(CustomOnLongClickListener listener) {
+        public void setCustomOnLongClickListener(CustomOnLongClickListener listener) {
             this.mLongClickListener = listener;
         }
 
@@ -233,5 +263,11 @@ public class AttendanceFragment extends Fragment {
 
     interface CustomOnLongClickListener {
         void onLongClick(View view, int position, EventInstance eventInstance);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getLoaderManager().restartLoader(COMBINED_AT_LOADER_ID, null, loaderCallBacks);
     }
 }

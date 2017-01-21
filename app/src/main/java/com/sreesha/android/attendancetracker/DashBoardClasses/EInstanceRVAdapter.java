@@ -47,6 +47,21 @@ public class EInstanceRVAdapter extends CursorRecyclerViewAdapter<EInstanceRVAda
         holder.endDateTV.setText(Utility.getFormattedTimeStamp(instance.getEndTimeStamp()));
 
         holder.creationDateTV.setText(Utility.getFormattedTimeStamp(instance.getCreationTimeStamp()));
+        holder.presentNumTV.setText(String.valueOf(instance.getType0Count()));
+        holder.absentNumTV.setText(String.valueOf(instance.getType1Count()));
+        holder.unkownNumTV.setText(String.valueOf(instance.getType2Count()));
+        holder.medicalNumTV.setText(String.valueOf(instance.getType3Count()));
+
+        holder.numParticipantTV
+                .setText(
+                        String.valueOf(
+                                instance.getType0Count()
+                                        + instance.getType1Count()
+                                        + instance.getType2Count()
+                                        + instance.getType3Count()
+                        )
+                );
+        holder.eventNameTV.setText(instance.getEventName());
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -60,6 +75,7 @@ public class EInstanceRVAdapter extends CursorRecyclerViewAdapter<EInstanceRVAda
         TextView unkownNumTV;
         TextView medicalNumTV;
 
+        TextView eventNameTV;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -67,6 +83,7 @@ public class EInstanceRVAdapter extends CursorRecyclerViewAdapter<EInstanceRVAda
             endDateTV = (TextView) itemView.findViewById(R.id.endTimeTV);
             numParticipantTV = (TextView) itemView.findViewById(R.id.numParticipantsTV);
             creationDateTV = (TextView) itemView.findViewById(R.id.creationDateTV);
+            eventNameTV = (TextView) itemView.findViewById(R.id.eventNameTV);
 
             presentNumTV = (TextView) itemView.findViewById(R.id.presentTV);
             absentNumTV = (TextView) itemView.findViewById(R.id.absentTV);

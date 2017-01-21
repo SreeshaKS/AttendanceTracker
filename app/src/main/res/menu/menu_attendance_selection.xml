@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/deleteParticipantsMenu"
+        android:icon="@drawable/ic_delete_white_36dp"
+        android:orderInCategory="100"
+        android:title="@string/delete_selected_participants"
+        app:showAsAction="collapseActionView|ifRoom" />
+    <item
+        android:id="@+id/countParticipantsMenu"
+        android:orderInCategory="100"
+        android:title="0"
+        app:showAsAction="collapseActionView|ifRoom" />
+</menu>
