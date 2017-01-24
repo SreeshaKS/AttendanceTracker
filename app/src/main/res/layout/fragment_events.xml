@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     tools:context="com.sreesha.android.attendancetracker.DashBoardClasses.EventsFragment">
 
+    <ImageView
+        android:id="@+id/emptyEventsIV"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/empty_events_message"
+        android:src="@drawable/ic_event_busy_grey_700_48dp" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/eventsRefreshLayout"
         android:layout_width="match_parent"
@@ -12,7 +20,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/eventsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

@@ -35,7 +35,7 @@ public class AttendanceDBHelper extends SQLiteOpenHelper {
                 + AttendanceContract.Users.column_linkToProfile
                 + " text , "
                 + AttendanceContract.Users.column_isAdmin
-                + " boolean , " + " UNIQUE ( "+ AttendanceContract.Users.column_userId +" ) )";
+                + " boolean , " + " UNIQUE ( " + AttendanceContract.Users.column_userId + " ) )";
         final String SQL_CREATE_EVENTS_TABLE
                 = "Create Table " +
                 AttendanceContract.Events.TABLE_EVENTS
@@ -75,7 +75,26 @@ public class AttendanceDBHelper extends SQLiteOpenHelper {
                 + " text , "
                 + AttendanceContract.EventInstance.column_eventName
                 + " text , "
-                + AttendanceContract.EventInstance.column_creationTimeStamp
+                + AttendanceContract.EventInstance.column_creationYear
+                + " integer , " +
+                AttendanceContract.EventInstance.column_creationMonth + " integer , " +
+                AttendanceContract.EventInstance.column_creationDay + " integer , " +
+                AttendanceContract.EventInstance.column_creationHour + " integer , " +
+                AttendanceContract.EventInstance.column_creationMinute + " integer , " +
+                AttendanceContract.EventInstance.column_creationSecond + " integer , " +
+                AttendanceContract.EventInstance.column_startYear + " integer , " +
+                AttendanceContract.EventInstance.column_startMonth + " integer , " +
+                AttendanceContract.EventInstance.column_startDay + " integer , " +
+                AttendanceContract.EventInstance.column_startHour + " integer , " +
+                AttendanceContract.EventInstance.column_startMinute + " integer , " +
+                AttendanceContract.EventInstance.column_startSecond + " integer , " +
+                AttendanceContract.EventInstance.column_endYear + " integer , " +
+                AttendanceContract.EventInstance.column_endMonth + " integer , " +
+                AttendanceContract.EventInstance.column_endDay + " integer , " +
+                AttendanceContract.EventInstance.column_endHour + " integer , " +
+                AttendanceContract.EventInstance.column_endMinute + " integer , " +
+                AttendanceContract.EventInstance.column_endSecond + " integer , " +
+                AttendanceContract.EventInstance.column_creationTimeStamp
                 + " text , "
                 + AttendanceContract.EventInstance.column_startTimeStamp
                 + " text , "
@@ -132,7 +151,7 @@ public class AttendanceDBHelper extends SQLiteOpenHelper {
                 + AttendanceContract.InstanceAttendance.column_instanceId
                 + " , "
                 + AttendanceContract.InstanceAttendance.column_userId + " ) "
-                +  " ) ";
+                + " ) ";
 
 
         db.execSQL(SQL_CREATE_USERS_TABLE);
@@ -143,8 +162,6 @@ public class AttendanceDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(" ALTER TABLE " + AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE
-        +" ADD COLUMN "+AttendanceContract.EventInstance.column_eventName);
 
     }
 }

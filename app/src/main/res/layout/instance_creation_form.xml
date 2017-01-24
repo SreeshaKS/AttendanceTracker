@@ -33,7 +33,7 @@
             android:layout_toEndOf="@+id/datePickerIV"
             android:layout_toRightOf="@+id/datePickerIV"
             android:gravity="center"
-            android:text="Date"
+            android:text="@string/date"
             android:textSize="16sp"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:gravity="center"
-                android:text="From"
+                android:text="@string/from"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -88,7 +88,7 @@
                 android:layout_toEndOf="@+id/hyphenTV"
                 android:layout_toRightOf="@+id/hyphenTV"
                 android:gravity="center"
-                android:text="To"
+                android:text="@string/to"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </RelativeLayout>

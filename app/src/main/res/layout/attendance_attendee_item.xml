@@ -3,13 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/backGroundLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
 
     <android.support.v7.widget.CardView
         android:id="@+id/event_item_cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:layout_centerVertical="true"
         app:cardCornerRadius="2dp">
 
         <RelativeLayout
@@ -41,6 +44,7 @@
                             android:id="@+id/userProfileIV"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:contentDescription="@string/user_profile_image"
                             android:scaleType="centerCrop" />
                     </android.support.v7.widget.CardView>
 
@@ -57,7 +61,7 @@
                             android:id="@+id/userIDTV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="User ID"
+                            android:text="@string/user_id"
                             android:textColor="@color/white"
                             android:textSize="16sp" />
 
@@ -66,7 +70,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/userIDTV"
-                            android:text="User Name"
+                            android:text="@string/user_name"
                             android:textColor="@color/white"
                             android:textSize="13sp" />
 
@@ -89,7 +93,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="20dp"
                             android:layout_marginStart="20dp"
-                            android:hint="Is Late" />
+                            android:hint="@string/is_late" />
 
                         <Button
                             android:id="@+id/noteButton"
@@ -101,6 +105,7 @@
                             android:layout_toEndOf="@+id/isLateCheckBox"
                             android:layout_toRightOf="@+id/isLateCheckBox"
                             android:background="@drawable/note_button_selector"
+                            android:contentDescription="@string/user_note"
                             android:gravity="center" />
                     </RelativeLayout>
                 </RelativeLayout>
@@ -121,7 +126,8 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginRight="20dp"
-                    android:background="@drawable/present_button_selector" />
+                    android:background="@drawable/present_button_selector"
+                    android:contentDescription="@string/present_button" />
 
 
                 <Button
@@ -130,8 +136,9 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginRight="20dp"
+                    android:background="@drawable/absent_button_selector"
 
-                    android:background="@drawable/absent_button_selector" />
+                    android:contentDescription="@string/absent_button" />
 
                 <Button
                     android:id="@+id/unknownIV"
@@ -139,13 +146,15 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginRight="20dp"
-                    android:background="@drawable/unkown_button_selector" />
+                    android:background="@drawable/unkown_button_selector"
+                    android:contentDescription="@string/unknown_button" />
 
                 <Button
                     android:id="@+id/medicalIV"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:background="@drawable/medical_button_selector" />
+                    android:background="@drawable/medical_button_selector"
+                    android:contentDescription="@string/medical_button" />
             </LinearLayout>
 
         </RelativeLayout>

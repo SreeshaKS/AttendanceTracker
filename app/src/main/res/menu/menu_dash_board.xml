@@ -2,9 +2,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sreesha.android.attendancetracker.DashBoardClasses.DashBoard">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+    <group android:id="@+id/firstGroup">
+        <item
+            android:id="@+id/newEventMenu"
+            android:icon="@drawable/ic_plus_white_36dp"
+            android:orderInCategory="100"
+            android:title="@string/add_new_event"
+            app:showAsAction="collapseActionView|ifRoom" />
+        <item
+            android:id="@+id/searchStatsMenu"
+            android:icon="@drawable/ic_search_white_24dp"
+            android:orderInCategory="100"
+            android:title="@string/search_by_usn"
+            app:showAsAction="collapseActionView|ifRoom" />
+    </group>
 </menu>

@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.sreesha.android.attendancetracker.DataHandlers.AttendanceContract;
 import com.sreesha.android.attendancetracker.DataHandlers.Event;
@@ -74,7 +75,7 @@ public class EventsFragment extends Fragment {
         super.onResume();
         if (isStateRestored)
             getLoaderManager().initLoader(EVENTS_LOADER_ID, null, loaderCallBacks);
-        else{
+        else {
             getLoaderManager().restartLoader(EVENTS_LOADER_ID, null, loaderCallBacks);
         }
     }
@@ -88,8 +89,11 @@ public class EventsFragment extends Fragment {
         return view;
     }
 
+    ImageView mEmptyEventsIV;
+
     private void initializeViewElements(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.eventsRecyclerView);
+        mEmptyEventsIV = (ImageView) view.findViewById(R.id.emptyEventsIV);
         initializeRecyclerView();
         initializeListeners();
     }
@@ -153,9 +157,11 @@ public class EventsFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            if (data != null)
+            if (data .getCount()>0) {
+                mEmptyEventsIV.setVisibility(View.GONE);
                 Log.d("Loader", "onLoadFinished" + data.getCount());
-            else {
+            }else {
+                mEmptyEventsIV.setVisibility(View.VISIBLE);
                 Log.d("Loader", "onLoadFinished : Null Data");
             }
             mEventsAdapter.swapCursor(data);

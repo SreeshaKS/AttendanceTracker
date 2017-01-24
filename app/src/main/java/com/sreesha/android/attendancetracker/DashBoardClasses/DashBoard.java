@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,17 +14,27 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 import com.sreesha.android.attendancetracker.DataHandlers.AttendanceContract;
 import com.sreesha.android.attendancetracker.DataHandlers.Event;
 import com.sreesha.android.attendancetracker.R;
+import com.sreesha.android.attendancetracker.Statistics.StatisticsFragment;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -57,6 +66,25 @@ public class DashBoard extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        TextView mUNameTV = (TextView) findViewById(R.id.userNameTV);
+        ImageView uPIV = (ImageView) findViewById(R.id.userProfileIV);
+
+        if (firebaseUser != null) {
+            Picasso.with(DashBoard.this)
+                    .load(firebaseUser.getPhotoUrl().toString())
+                    .into(uPIV);
+
+            mUNameTV.setText(firebaseUser.getDisplayName());
+        } else {
+            Picasso.with(DashBoard.this)
+                    .load(R.drawable.ic_face_profile_grey600_36dp)
+                    .into(uPIV);
+
+            mUNameTV.setText("");
+        }
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +98,7 @@ public class DashBoard extends AppCompatActivity
                         showEventAdditionDialog();
                         break;
                     case 2:
+
                         break;
                 }
             }
@@ -81,7 +110,7 @@ public class DashBoard extends AppCompatActivity
 
     void showEventAdditionDialog() {
         createEventDialog = new MaterialDialog.Builder(this)
-                .title("Create an Event")
+                .title(R.string.create_event)
                 .customView(R.layout.event_creation_dialog_form, false)
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
@@ -103,7 +132,7 @@ public class DashBoard extends AppCompatActivity
                                     .show();
                         } else {
                             Log.d("Android ID", Settings.Secure.ANDROID_ID);
-                            java.sql.Timestamp timestamp = new java.sql.Timestamp(new Date().getTime());
+                            Timestamp timestamp = new Timestamp(new Date().getTime());
                             Event newEvent = new Event(
                                     String.valueOf(
                                             (eventName + timestamp.toString())
@@ -187,7 +216,7 @@ public class DashBoard extends AppCompatActivity
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(0);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -197,11 +226,20 @@ public class DashBoard extends AppCompatActivity
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
+                        fab.setVisibility(View.INVISIBLE);
+                        fab.setEnabled(false);
                         break;
                     case 1:
-
+                        fab.setVisibility(View.VISIBLE);
+                        fab.setEnabled(true);
+                        fab.setImageDrawable(
+                                getResources()
+                                        .getDrawable(R.drawable.ic_plus_white_36dp)
+                        );
                         break;
                     case 2:
+                        fab.setVisibility(View.INVISIBLE);
+                        fab.setEnabled(false);
                         break;
                 }
             }
@@ -251,5 +289,20 @@ public class DashBoard extends AppCompatActivity
         public int getCount() {
             return fragmentsArrayList.size();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        /*getMenuInflater().inflate(R.menu.menu_dash_board, menu);*/
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem i;
+        if (mTabLayout != null) {
+            Log.d("Menu", "Invalidating");
+        }
+        return true;
     }
 }

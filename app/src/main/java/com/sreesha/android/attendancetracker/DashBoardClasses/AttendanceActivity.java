@@ -58,14 +58,6 @@ public class AttendanceActivity extends AppCompatActivity {
         initializeRecyclerView();
         initialiseListeners();
         handleIntent();
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         getSupportLoaderManager().initLoader(EVENT_LOADER_ID, null, loaderCallBacks);
         getSupportLoaderManager().initLoader(ATTENDANCE_LOADER_ID, null, loaderCallBacks);
 
@@ -145,7 +137,7 @@ public class AttendanceActivity extends AppCompatActivity {
                 if (!areParticipantsAdded) {
                     createAndShowParticipantsAdditionDialog(" ");
                 } else {
-                    createAndShowParticipantsAdditionDialog("Add New Users");
+                    createAndShowParticipantsAdditionDialog(getString(R.string.add_new_users));
                 }
             }
             break;
@@ -182,9 +174,11 @@ public class AttendanceActivity extends AppCompatActivity {
                                             public void onParticipantsInserted() {
                                                 Toast
                                                         .makeText(AttendanceActivity.this
-                                                                , "Insertion Done"
+                                                                , R.string.users_created_toast_string
                                                                 , Toast.LENGTH_SHORT)
                                                         .show();
+                                                if (mProgressDialog.isShowing())
+                                                    mProgressDialog.dismiss();
                                                 getSupportLoaderManager()
                                                         .restartLoader(
                                                                 ATTENDANCE_LOADER_ID
@@ -198,12 +192,12 @@ public class AttendanceActivity extends AppCompatActivity {
                                 a.execute();
                             } else {
                                 Toast.makeText(AttendanceActivity.this
-                                        , "Please do not leave any field empty"
+                                        , R.string.do_not_leave_any_field_empty
                                         , Toast.LENGTH_SHORT).show();
                             }
                         } catch (NumberFormatException e) {
                             Toast.makeText(AttendanceActivity.this
-                                    , "Please do not leave any field empty"
+                                    , R.string.do_not_leave_any_field_empty
                                     , Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -242,7 +236,7 @@ public class AttendanceActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mProgressDialog = Utility.getMaterialProgressDialog("Creating Users", "Please Wait", AttendanceActivity.this);
+            mProgressDialog = Utility.getMaterialProgressDialog(getString(R.string.creating_users), getString(R.string.please_wait), AttendanceActivity.this);
             mProgressDialog.show();
         }
 
@@ -305,7 +299,7 @@ public class AttendanceActivity extends AppCompatActivity {
             = new android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>() {
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            mProgressDialog = Utility.getMaterialProgressDialog("Loading Users", "Please Wait", AttendanceActivity.this);
+            mProgressDialog = Utility.getMaterialProgressDialog(getString(R.string.loding_users), getString(R.string.please_wait), AttendanceActivity.this);
             switch (id) {
                 case ATTENDANCE_LOADER_ID:
                     return new CursorLoader(

@@ -25,6 +25,9 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.sreesha.android.attendancetracker.AttendanceApplication;
 import com.sreesha.android.attendancetracker.DataHandlers.AttendanceContract;
 import com.sreesha.android.attendancetracker.DataHandlers.AttendanceDBHelper;
@@ -79,6 +82,12 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
         if (savedInstanceState != null) {
             isStateRestored = true;
         }
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-1922951486583620~9852395998");
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         mCoOrdLayout = (CoordinatorLayout) findViewById(R.id.coOrdLayout);
@@ -151,7 +160,7 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
 
     void showEventAdditionDialog() {
         MaterialDialog createInstanceDialog = new MaterialDialog.Builder(InstanceCreationActivity.this)
-                .title("Create an Instance")
+                .title(R.string.create_an_instance)
                 .customView(R.layout.instance_creation_form, false)
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
@@ -165,16 +174,38 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
                             String notes = notesET.getText().toString();
                             if (notes.isEmpty())
                                 notes = null;
+                            timeStamp = timeStamp.substring(0, timeStamp.indexOf("."));
+                            startTimeStamp = startTimeStamp.substring(0, startTimeStamp.indexOf("."));
+                            endTimeStamp = endTimeStamp.substring(0, endTimeStamp.indexOf("."));
+                            Log.d("Debug", timeStamp);
                             mEventInstance
                                     = new EventInstance(
                                     String.valueOf((event.getEventId() + timeStamp).hashCode())
                                     , event.getEventId()
                                     , event.getEventName()
-                                    , timeStamp
-                                    , startTimeStamp
-                                    , endTimeStamp
+                                    , timeStamp/*.split(".")[0]*/
+                                    , startTimeStamp/*.split(".")[0]*/
+                                    , endTimeStamp/*.split(".")[0]*/
                                     , endTimeCal.getTimeInMillis() - startTimeCal.getTimeInMillis()
                                     , notes
+                                    , creationCal.get(Calendar.YEAR)
+                                    , creationCal.get(Calendar.MONTH)
+                                    , creationCal.get(Calendar.DAY_OF_MONTH)
+                                    , creationCal.get(Calendar.HOUR_OF_DAY)
+                                    , creationCal.get(Calendar.MINUTE)
+                                    , creationCal.get(Calendar.SECOND)
+                                    , startTimeCal.get(Calendar.YEAR)
+                                    , startTimeCal.get(Calendar.MONTH)
+                                    , startTimeCal.get(Calendar.DAY_OF_MONTH)
+                                    , startTimeCal.get(Calendar.HOUR_OF_DAY)
+                                    , startTimeCal.get(Calendar.MINUTE)
+                                    , startTimeCal.get(Calendar.SECOND)
+                                    , startTimeCal.get(Calendar.YEAR)
+                                    , endTimeCal.get(Calendar.MONTH)
+                                    , endTimeCal.get(Calendar.DAY_OF_MONTH)
+                                    , endTimeCal.get(Calendar.HOUR_OF_DAY)
+                                    , endTimeCal.get(Calendar.MINUTE)
+                                    , endTimeCal.get(Calendar.SECOND)
                             );
                             ContentValues values = EventInstance.getContentValues(mEventInstance);
                             getContentResolver()
@@ -195,7 +226,7 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
 
                         } else {
                             Toast.makeText(getBaseContext()
-                                    , "Date and Time Fields cannot be empty", Toast.LENGTH_SHORT)
+                                    , R.string.date_and_time_cannot_be_empty, Toast.LENGTH_SHORT)
                                     .show();
                         }
                     }
@@ -230,7 +261,7 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
                                 , now.get(Calendar.MINUTE)
                                 , false
                         );
-                        tpd.show(getFragmentManager(), "TimePickerDialog");
+                        tpd.show(getFragmentManager(), getString(R.string.time_picker_dialog_title));
 
                     }
                     break;
@@ -251,11 +282,11 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
                                     , startTimeCal.get(Calendar.MINUTE)
                                     , startTimeCal.get(Calendar.SECOND)
                             );
-                            tpd.show(getFragmentManager(), "TimePickerDialog");
+                            tpd.show(getFragmentManager(), getString(R.string.time_picker_dialog_title));
                         } else {
                             Toast
                                     .makeText(getBaseContext()
-                                            , "Please set the start time! "
+                                            , R.string.please_set_the_start_time
                                             , Toast.LENGTH_SHORT)
                                     .show();
                         }
@@ -272,7 +303,7 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
                         );
                         dpd.setMinDate(now);
                         dpd.setVersion(DatePickerDialog.Version.VERSION_2);
-                        dpd.show(getFragmentManager(), "DatePickerDialog");
+                        dpd.show(getFragmentManager(), getString(R.string.date_picker_dialog_title));
                     }
                     break;
                 }
@@ -371,7 +402,7 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
                     break;
             }
         } else {
-            Toast.makeText(getBaseContext(), "Please set the date Field First", Toast.LENGTH_SHORT)
+            Toast.makeText(getBaseContext(), R.string.please_set_date_field_first, Toast.LENGTH_SHORT)
                     .show();
         }
     }

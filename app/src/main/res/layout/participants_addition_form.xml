@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
-        android:text="University Identifier Prefix"
+        android:text="@string/universiy_identifier_prefix"
         android:textColor="#000000"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/formTitleTV"
         android:layout_centerHorizontal="true"
-        android:hint="USN Prefix" />
+        android:hint="@string/universiy_identifier_prefix" />
 
     <TextView
         android:id="@+id/randTitleTV"
@@ -30,7 +30,7 @@
         android:layout_below="@+id/usnPrefixET"
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
-        android:text="Enter The Roll Number Range"
+        android:text="@string/ecnter_roll_number_page"
         android:textColor="#000000"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -72,7 +72,7 @@
             android:layout_toEndOf="@+id/hyphenTextView"
             android:layout_toRightOf="@+id/hyphenTextView"
             android:gravity="center"
-            android:hint="To"
+            android:hint="@string/to"
             android:inputType="number" />
     </RelativeLayout>
 

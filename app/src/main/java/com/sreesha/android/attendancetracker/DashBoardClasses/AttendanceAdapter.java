@@ -267,14 +267,14 @@ public class AttendanceAdapter extends CursorRecyclerViewAdapter<AttendanceAdapt
 
         private void showNoteDialog(Context c, String previousNote) {
             new MaterialDialog.Builder(c)
-                    .title("Take Notes")
+                    .title(R.string.take_notes)
                     .content(previousNote)
                     .inputType(InputType.TYPE_CLASS_TEXT |
                             InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
                             InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                     .inputRange(2, 100)
-                    .positiveText("Submit")
-                    .input("Write some Funky Stuff", previousNote, new MaterialDialog.InputCallback() {
+                    .positiveText(R.string.submit)
+                    .input(c.getString(R.string.write_some_funky_stuff), previousNote, new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
 

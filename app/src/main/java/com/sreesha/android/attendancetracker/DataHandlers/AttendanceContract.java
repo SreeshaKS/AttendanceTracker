@@ -107,10 +107,36 @@ public class AttendanceContract {
 
         public static final String column_instanceId = "instanceId";
         public static final String column_eventId = "eventId";
+
+        public static final String column_creationYear = "creationYear";
+        public static final String column_creationMonth = "creationMonth";
+        public static final String column_creationDay = "creationDay";
+        public static final String column_creationHour = "creationHour";
+        public static final String column_creationMinute = "creationMinute";
+        public static final String column_creationSecond = "creationSecond";
+
         public static final String column_creationTimeStamp = "creationTimeStamp";
+
         public static final String column_duration = "duration";
+
+        public static final String column_startYear = "startYear";
+        public static final String column_startMonth = "startMonth";
+        public static final String column_startDay = "startDay";
+        public static final String column_startHour = "startHour";
+        public static final String column_startMinute = "startMinute";
+        public static final String column_startSecond = "startSecond";
+
         public static final String column_startTimeStamp = "startTimeStamp";
+
+        public static final String column_endYear = "endYear";
+        public static final String column_endMonth = "endMonth";
+        public static final String column_endDay = "endDay";
+        public static final String column_endHour = "endHour";
+        public static final String column_endMinute = "endMinute";
+        public static final String column_endSecond = "endSecond";
+
         public static final String column_endTimeStamp = "endTimeStamp";
+
         public static final String column_note = "note";
         public static final String column_eventName = "eventName";
 

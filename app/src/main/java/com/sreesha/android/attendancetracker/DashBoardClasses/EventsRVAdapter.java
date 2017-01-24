@@ -60,8 +60,10 @@ public class EventsRVAdapter extends CursorRecyclerViewAdapter<EventsRVAdapter.V
         }
         Log.d("EventTS", event.getTimeStamp());
         holder.creationDateTV.setText(Utility.getFormattedTimeStamp(event.getTimeStamp()));
-        holder.numInstancesTV.setText(event.getNumberOfInstances() + " instances");
-        holder.numParticipantsTV.setText(event.getNumOfParticipants() + " participants");
+        holder.numInstancesTV.setText(event.getNumberOfInstances()
+                +" "+ holder.itemView.getContext().getString(R.string.instances));
+        holder.numParticipantsTV.setText(event.getNumOfParticipants()
+                +" "+ holder.itemView.getContext().getString(R.string.participants));
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener

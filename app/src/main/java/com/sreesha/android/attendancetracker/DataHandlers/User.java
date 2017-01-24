@@ -11,12 +11,14 @@ import android.os.Parcelable;
 
 public class User implements Parcelable {
 
-    String userID;
-    String userName;
-    String userEmail;
+    public static final String USER_PARCELABLE_KEY = "userParcelableKey";
 
-    int isAdmin;
-    String profileLink;
+    private String userID;
+    private String userName;
+    private String userEmail;
+
+    private int isAdmin;
+    private String profileLink;
 
     public User(String userID, String userName, String userEmail, int isAdmin, String profileLink) {
         this.userID = userID;
@@ -99,5 +101,10 @@ public class User implements Parcelable {
                 , cursor.getInt(cursor.getColumnIndex(AttendanceContract.Users.column_isAdmin))
                 , cursor.getString(cursor.getColumnIndex(AttendanceContract.Users.column_linkToProfile))
         );
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf((userID + userName + userEmail + isAdmin).hashCode());
     }
 }

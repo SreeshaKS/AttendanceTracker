@@ -29,7 +29,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:gravity="center"
-                    android:text="Event Name"
+                    android:text="@string/event_name"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
@@ -57,6 +57,7 @@
                     <ImageView
                         android:id="@+id/participantIV"
                         android:layout_width="24dp"
+                        android:contentDescription="@string/num_participants"
                         android:layout_height="24dp"
                         android:layout_margin="2dp"
                         android:layout_toEndOf="@+id/numParticipantsTV"
@@ -68,6 +69,7 @@
                         android:id="@+id/calIV"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        android:contentDescription="@string/creation_date"
                         android:layout_centerVertical="true"
                         android:layout_margin="2dp"
                         android:layout_toEndOf="@+id/participantIV"
@@ -103,6 +105,7 @@
                     <ImageView
                         android:id="@+id/timerIV"
                         android:layout_width="0dp"
+                        android:contentDescription="@string/start_date"
                         android:layout_height="24dp"
                         android:layout_weight="10"
                         android:src="@drawable/ic_timer_white_36dp" />
@@ -111,7 +114,6 @@
                         android:id="@+id/startTimeTV"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/timerIV"
                         android:layout_weight="42.5"
                         android:gravity="center"
                         android:text="January 15th , 2011"
@@ -123,7 +125,6 @@
                         android:id="@+id/hyphenTV"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/startTimeTV"
                         android:layout_weight="5"
                         android:text=" - "
                         android:textColor="@color/white"
@@ -134,7 +135,6 @@
                         android:id="@+id/endTimeTV"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/hyphenTV"
                         android:layout_weight="42.5"
                         android:gravity="center"
                         android:text="January 15th , 2011"
@@ -169,6 +169,7 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
+                android:contentDescription="@string/present_number"
                 android:layout_weight="12.5"
                 android:src="@drawable/ic_check_circle_outline_grey600_36dp" />
 
@@ -186,6 +187,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_weight="12.5"
+                android:contentDescription="@string/absent_number"
                 android:src="@drawable/ic_close_circle_outline_grey600_36dp" />
 
             <TextView
@@ -201,6 +203,7 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
+                android:contentDescription="@string/unkown_number"
                 android:layout_weight="12.5"
                 android:src="@drawable/ic_help_circle_grey600_36dp" />
 
@@ -218,6 +221,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_weight="12.5"
+                android:contentDescription="@string/medical_leave"
                 android:src="@drawable/medical_button_selector" />
         </LinearLayout>
     </RelativeLayout>

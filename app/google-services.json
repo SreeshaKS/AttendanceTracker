@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "13600527389",
+    "firebase_url": "https://attendance-tracker-156512.firebaseio.com",
+    "project_id": "attendance-tracker-156512",
+    "storage_bucket": "attendance-tracker-156512.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:13600527389:android:76ed9c6325144cb6",
+        "android_client_info": {
+          "package_name": "com.sreesha.android.attendancetracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "13600527389-h38kdj3m4qbs4u7uit98v78pmnkop6in.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sreesha.android.attendancetracker",
+            "certificate_hash": "B6EB9CC3AC329AFEF09081F88FC864C7B35039C7"
+          }
+        },
+        {
+          "client_id": "13600527389-p35ujr1dskv4jfnho3rrho1ahuc7dp52.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOKgf0ovpeH8d0v4jfxXT68aiqkISp5y0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "13600527389-p35ujr1dskv4jfnho3rrho1ahuc7dp52.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

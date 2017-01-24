@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/userIDTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="@string/user_id"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/eventCTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/userIDTV"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="@string/event_count"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/instanceCTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userIDTV"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/eventCTV"
+            android:layout_toRightOf="@+id/eventCTV"
+            android:gravity="center"
+            android:text="@string/instance_count"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+
+        <LinearLayout
+            android:id="@+id/attendanceTypeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/eventCTV"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/presentTV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="12.5"
+                android:gravity="center"
+                android:text="25"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="12.5"
+                android:contentDescription="@string/present_number"
+                android:src="@drawable/ic_check_circle_outline_grey600_36dp" />
+
+            <TextView
+                android:id="@+id/absentTV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="12.5"
+                android:gravity="center"
+                android:text="25"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@string/absent_number"
+                android:layout_weight="12.5"
+                android:src="@drawable/ic_close_circle_outline_grey600_36dp" />
+
+            <TextView
+                android:id="@+id/unknownTV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="12.5"
+                android:gravity="center"
+                android:text="25"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="12.5"
+                android:contentDescription="@string/unkown_number"
+                android:src="@drawable/ic_help_circle_grey600_36dp" />
+
+            <TextView
+                android:id="@+id/medicalTV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="12.5"
+                android:gravity="center"
+                android:text="25"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:contentDescription="@string/medical_leave"
+                android:layout_height="20dp"
+                android:layout_weight="12.5"
+                android:src="@drawable/medical_button_selector" />
+        </LinearLayout>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/attendanceStatBarChart"
+            android:layout_width="300dp"
+            android:contentDescription="@string/statistics_chart"
+            android:layout_height="300dp"
+            android:layout_below="@+id/attendanceTypeLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
