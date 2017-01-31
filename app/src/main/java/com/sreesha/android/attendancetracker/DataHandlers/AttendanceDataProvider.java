@@ -1,5 +1,7 @@
 package com.sreesha.android.attendancetracker.DataHandlers;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -11,6 +13,10 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.RemoteViews;
+
+import com.sreesha.android.attendancetracker.R;
+import com.sreesha.android.attendancetracker.Widget.WidgetFactory;
 
 /**
  * Created by Sreesha on 08-01-2017.
@@ -187,6 +193,13 @@ public class AttendanceDataProvider extends ContentProvider {
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
+
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getContext());
+                ComponentName thisAppWidget = new ComponentName(getContext().getPackageName()
+                        , WidgetFactory.class.getName());
+                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
+                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds
+                        , R.layout.event_widget_layout);
                 break;
             }
             case INSTANCE_EVENT: {

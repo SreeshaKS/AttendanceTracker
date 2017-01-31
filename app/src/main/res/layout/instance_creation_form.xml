@@ -9,9 +9,8 @@
     <RelativeLayout
         android:id="@+id/datePickerLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight="10"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:gravity="center">
 
         <ImageView
@@ -28,8 +27,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="2dp"
-            android:layout_marginStart="2dp"
             android:layout_toEndOf="@+id/datePickerIV"
             android:layout_toRightOf="@+id/datePickerIV"
             android:gravity="center"
@@ -41,9 +38,8 @@
     <RelativeLayout
         android:id="@+id/timePickerLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight="20">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
 
         <ImageView
             android:id="@+id/timePickerIV"
@@ -62,7 +58,7 @@
                 android:id="@+id/startTimeDisplayTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:gravity="center"
                 android:text="@string/from"
                 android:textSize="16sp"
@@ -72,7 +68,7 @@
                 android:id="@+id/hyphenTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:layout_toEndOf="@+id/startTimeDisplayTV"
                 android:layout_toRightOf="@+id/startTimeDisplayTV"
                 android:gravity="center"
@@ -84,7 +80,7 @@
                 android:id="@+id/endTimeDisplayTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:layout_toEndOf="@+id/hyphenTV"
                 android:layout_toRightOf="@+id/hyphenTV"
                 android:gravity="center"
@@ -94,19 +90,13 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight="60"
-        android:hint="Notes"
-        app:hintEnabled="true">
 
-        <EditText
-            android:id="@+id/instanceNotesET"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="16sp" />
-    </android.support.design.widget.TextInputLayout>
+    <EditText
+        android:id="@+id/instanceNotesET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:hint="@string/notes_edit_text_hint"
+        android:textSize="16sp" />
 </LinearLayout>

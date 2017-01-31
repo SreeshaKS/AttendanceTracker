@@ -70,6 +70,7 @@ public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public RemoteViews getViewAt(int position) {
         RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_event_list_item);
+        Log.d("WidgetDebug", "Cursor Count:" + mCursor.getCount() + "Position : " + position);
         if (mCursor.moveToPosition(position)) {
             Log.d("WidgetDebug", "Cursor Count:" + mCursor.getCount() + "Position : " + position);
             Event e = Event.getEventFromCursor(mCursor);
@@ -94,8 +95,12 @@ public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
             }
             Log.d("WidgetEventTS", e.getTimeStamp());
             remoteViews.setTextViewText(R.id.creationDateTV, Utility.getFormattedTimeStamp(e.getTimeStamp()));
-            remoteViews.setTextViewText(R.id.numInstancesTV, e.getNumberOfInstances() + " instances");
-            remoteViews.setTextViewText(R.id.numParticipantsTV, e.getNumOfParticipants() + " participants");
+            remoteViews.setTextViewText(R.id.numInstancesTV,
+                    e.getNumberOfInstances()
+                            + mContext.getString(R.string.instances));
+            remoteViews.setTextViewText(R.id.numParticipantsTV,
+                    e.getNumOfParticipants()
+                            + mContext.getString(R.string.participants));
         }
         return remoteViews;
     }

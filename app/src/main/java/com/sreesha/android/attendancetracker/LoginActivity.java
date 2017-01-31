@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w("CompleteList", "signInWithCredential", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, getString(com.sreesha.android.attendancetracker.R.string.auth_failed),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity implements
             }
         };
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("13600527389-p35ujr1dskv4jfnho3rrho1ahuc7dp52.apps.googleusercontent.com")
+                .requestIdToken(BuildConfig.WEB_CLIENT_ID)
                 .requestEmail()
                 .build();
 
