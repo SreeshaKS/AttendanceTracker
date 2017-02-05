@@ -47,30 +47,49 @@
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/profileImageCard"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            app:cardCornerRadius="30dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/userProfileIV"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:contentDescription="@string/user_profile_image"
-                android:scaleType="centerCrop" />
-        </android.support.v7.widget.CardView>
+                android:id="@+id/timeLineIVB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end|top"
+                android:layout_margin="10dp"
+                android:contentDescription="@string/open_timeline_cont_desc"
+                android:src="@drawable/ic_timeline" />
 
-        <TextView
-            android:id="@+id/userNameTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+            <android.support.v7.widget.CardView
+                android:id="@+id/profileImageCard"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                app:cardCornerRadius="30dp">
+
+                <ImageView
+                    android:id="@+id/userProfileIV"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/user_profile_image"
+                    android:scaleType="centerCrop" />
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/userNameTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profileImageCard"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </RelativeLayout>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
@@ -84,6 +103,7 @@
             app:tabMaxWidth="0dp"
             app:tabSelectedTextColor="@color/colorAccent"
             app:tabTextColor="@color/white" />
+
     </android.support.design.widget.AppBarLayout>
 
 </android.support.design.widget.CoordinatorLayout>

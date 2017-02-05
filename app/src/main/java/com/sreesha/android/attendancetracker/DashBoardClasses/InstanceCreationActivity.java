@@ -36,6 +36,7 @@ import com.sreesha.android.attendancetracker.DataHandlers.EventInstance;
 import com.sreesha.android.attendancetracker.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.Timepoint;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -82,11 +83,11 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
         if (savedInstanceState != null) {
             isStateRestored = true;
         }
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-1922951486583620~9852395998");
+        /*MobileAds.initialize(getApplicationContext(), "ca-app-pub-1922951486583620~9852395998");
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        mAdView.loadAd(adRequest);*/
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -260,6 +261,12 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
                                 , now.get(Calendar.HOUR_OF_DAY)
                                 , now.get(Calendar.MINUTE)
                                 , false
+                        );
+                        tpd.setMinTime(
+                                new Timepoint(
+                                        now.get(Calendar.HOUR_OF_DAY)
+                                        , now.get(Calendar.MINUTE)
+                                )
                         );
                         tpd.show(getFragmentManager(), getString(R.string.time_picker_dialog_title));
 

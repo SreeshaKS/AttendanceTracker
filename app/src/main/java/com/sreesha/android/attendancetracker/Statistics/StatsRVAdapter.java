@@ -119,13 +119,11 @@ public class StatsRVAdapter extends CursorRecyclerViewAdapter<StatsRVAdapter.Vie
     }
 
     private void setChartData(BarChart mChart, UserStatData userStatData) {
-        int start = 0, count = 11;
+        int start = 1, count = 12;
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
 
-        for (int i = start; i < count; i++) {
-            float value = (float) Math.random();
-            Log.d("Vals", " Val : " + userStatData.getMonthWiseCount()[i]);
-            yVals1.add(new BarEntry(i + 1, (int) userStatData.getMonthWiseCount()[i]));
+        for (int i = start; i <= count; i++) {
+            yVals1.add(new BarEntry(i, (int) userStatData.getMonthWiseCount()[i - 1]));
         }
         BarDataSet set1;
         set1 = new BarDataSet(yVals1, "The year 2017");
@@ -197,11 +195,11 @@ public class StatsRVAdapter extends CursorRecyclerViewAdapter<StatsRVAdapter.Vie
                     queryDateWiseData(
                             u
                             , String.valueOf(yearInt)
-                            , (i + 1) < 10 ? String.valueOf("0" + (i + 1)) : String.valueOf(i + 1)
+                            , String.valueOf(i)
                             , db
                     );
             if (cursor.moveToFirst()) {
-                mC[i] = cursor.getLong(cursor.getColumnIndex(column_dateWiseInstanceCount));
+                mC[i] = cursor.getLong(0/*cursor.getColumnIndex(column_dateWiseInstanceCount)*/);
             } else {
                 mC[i] = 0;
             }
@@ -240,39 +238,28 @@ public class StatsRVAdapter extends CursorRecyclerViewAdapter<StatsRVAdapter.Vie
     private Cursor queryDateWiseData(User u, String year, String month, SQLiteDatabase dBase) {
         return dBase
                 .query(
-                        AttendanceContract.Events.TABLE_EVENTS + " , "
-                                + AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE + " , "
+                        AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE + " , "
                                 + AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE
                         , new String[]{
-                                " coalesce ( COUNT ( DISTINCT ( " +
-                                        AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE
-                                        + " . " +
-                                        AttendanceContract.InstanceAttendance.column_instanceId
-                                        + " ) ) , 0 ) AS " + column_dateWiseInstanceCount
+
+                                " COALESCE ( DISTINCT ( COUNT ( * ) ), 0 ) AS " + column_dateWiseInstanceCount
+
                         }
                         , AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE
                                 + "."
                                 + AttendanceContract.InstanceAttendance.column_userId + " = ? AND "
-                                 /*   *//*Events.eventId = InstanceAttendance.eventId*//*
-                                + AttendanceContract.Events.TABLE_EVENTS
+                                + AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE
                                 + "."
-                                + AttendanceContract.Events.column_eventId
-                                + " =  "
+                                + AttendanceContract.EventInstance.column_instanceId
+                                + " = "
                                 + AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE
-                                + "." + AttendanceContract.InstanceAttendance.column_eventId + " AND "*/
-                                    /*EventInstance.eventId = InstanceAttendance.eventId*/
+                                + "." + AttendanceContract.InstanceAttendance.column_instanceId + " AND "
                                 + AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE
                                 + "."
                                 + AttendanceContract.EventInstance.column_eventId
                                 + " = "
                                 + AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE
                                 + "." + AttendanceContract.InstanceAttendance.column_eventId
-                                //EventInstance.startTimeStamp LIKE "yyyy-MM-dd HH:mm:ss.SSS"
-
-                                /*+ " AND "
-                                + AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE
-                                + "." + AttendanceContract.EventInstance.column_startTimeStamp
-                                + " LIKE " + "\'" + timePat + "\' " */
                                 + " AND "
                                 + AttendanceContract.InstanceAttendance.TABLE_INSTANCE_ATTENDANCE
                                 + "." + AttendanceContract.InstanceAttendance.column_attendanceType + " = ? "

@@ -1,6 +1,7 @@
 package com.sreesha.android.attendancetracker.DashBoardClasses;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -33,6 +34,7 @@ import com.sreesha.android.attendancetracker.DataHandlers.AttendanceContract;
 import com.sreesha.android.attendancetracker.DataHandlers.Event;
 import com.sreesha.android.attendancetracker.R;
 import com.sreesha.android.attendancetracker.Statistics.StatisticsFragment;
+import com.sreesha.android.attendancetracker.Timeline.TimelineActivity;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -194,7 +196,10 @@ public class DashBoard extends AppCompatActivity
         createEventDialog.show();
     }
 
+    ImageView mTimeLineIVB;
+
     private void initializeViewElements() {
+        mTimeLineIVB = (ImageView) findViewById(R.id.timeLineIVB);
         mAttendanceFragment = AttendanceFragment.newInstance(null, null);
         mStatisticsFragment = StatisticsFragment.newInstance(null, null);
         mEventsFragment = EventsFragment.newInstance(null, null);
@@ -207,7 +212,12 @@ public class DashBoard extends AppCompatActivity
     }
 
     private void initializeListeners() {
-
+        mTimeLineIVB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashBoard.this, TimelineActivity.class));
+            }
+        });
     }
 
     @Override
