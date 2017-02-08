@@ -435,6 +435,7 @@ public class AttendanceAdapter extends CursorRecyclerViewAdapter<AttendanceAdapt
             @Override
             protected void onPostExecute(Object s) {
                 super.onPostExecute(s);
+                db.close();
                 clearSelectionList();
             }
         };

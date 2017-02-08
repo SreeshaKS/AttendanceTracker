@@ -388,4 +388,9 @@ public class EventInstance implements Parcelable {
         parcel.writeInt(endMinute);
         parcel.writeInt(endSecond);
     }
+
+    @Override
+    public String toString() {
+        return (eventID + instanceID);
+    }
 }

@@ -127,4 +127,9 @@ public class Event implements Parcelable {
         parcel.writeLong(numberOfInstances);
         parcel.writeString(timeStamp);
     }
+
+    @Override
+    public String toString() {
+        return (eventId+eventType);
+    }
 }

@@ -17,6 +17,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -114,6 +116,7 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
         getSupportLoaderManager().initLoader(INSTANCE_LOADER_ID, null, loaderCallBacks);
     }
 
+    boolean shouldInflateSelectionMenu = false;
 
     private void initializeListeners() {
         mEventInstanceAdapter.setCustomOnClickListener(new EInstanceRVAdapter.CustomOnClickListener() {
@@ -141,6 +144,30 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
             @Override
             public void onLongClick(View view, int position, EventInstance eventInstance) {
 
+            }
+        });
+        mEventInstanceAdapter.registerSelectionEventNotifier(new AttendanceAdapter.SelectionEventNotifier() {
+            @Override
+            public void OnSelectionEventTriggered(int count) {
+                if (countMenuItem != null) {
+                    countMenuItem.setTitle(String.valueOf(count));
+                }
+            }
+
+            @Override
+            public void OnSelectionStateChanged(boolean isInSelectionMode) {
+                if (isInSelectionMode) {
+                    shouldInflateSelectionMenu = true;
+                    invalidateOptionsMenu();
+                } else {
+                    shouldInflateSelectionMenu = false;
+                    invalidateOptionsMenu();
+                }
+            }
+
+            @Override
+            public void OnSelectedDeleteRequestComplete() {
+                getSupportLoaderManager().restartLoader(INSTANCE_LOADER_ID, null, loaderCallBacks);
             }
         });
     }
@@ -433,11 +460,34 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
 
         ContentValues cV = new ContentValues();
         cV.put(AttendanceContract.Events.column_numOfParticipants, p);
+
+        c = instanceCountQueryFunction(mOpenHelper);
+        p = 0;
+        if (c.moveToFirst()) {
+            p = c.getLong(c.getColumnIndex(c.getColumnName(0)));
+        }
+
+        cV.put(AttendanceContract.Events.column_numOfInstances, p);
         getContentResolver()
                 .update(AttendanceContract.Events.CONTENT_URI
                         , cV
                         , AttendanceContract.Events.column_eventId + " = ? "
                         , new String[]{event.getEventId()}
+                );
+    }
+
+    private Cursor instanceCountQueryFunction(AttendanceDBHelper mOpenHelper) {
+        return mOpenHelper
+                .getReadableDatabase()
+                .query(AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE,
+                        new String[]{" COUNT( DISTINCT(" + AttendanceContract.InstanceAttendance.column_instanceId + " ) ) "}
+                        , AttendanceContract.InstanceAttendance.column_eventId + " = ? "
+                        , new String[]{
+                                event.getEventId()
+                        }
+                        , null
+                        , null
+                        , null
                 );
     }
 
@@ -454,5 +504,31 @@ public class InstanceCreationActivity extends AppCompatActivity implements TimeP
                         , null
                         , null
                 );
+    }
+
+    MenuItem countMenuItem;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (!shouldInflateSelectionMenu) {
+
+        } else {
+            getMenuInflater().inflate(R.menu.menu_attendance_selection, menu);
+            Log.d("MenuItem", "Size : " + menu.size());
+
+            countMenuItem = menu.findItem(R.id.countParticipantsMenu);
+
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.deleteParticipantsMenu: {
+                mEventInstanceAdapter.notifySelectionDeleteRequest(InstanceCreationActivity.this);
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

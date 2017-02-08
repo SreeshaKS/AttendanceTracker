@@ -8,12 +8,20 @@
             android:icon="@drawable/ic_plus_white_36dp"
             android:orderInCategory="100"
             android:title="@string/add_new_event"
+            android:visible="false"
+            app:showAsAction="collapseActionView|ifRoom" />
+        <item
+            android:id="@+id/timeLineMenu"
+            android:icon="@drawable/ic_timeline"
+            android:orderInCategory="100"
+            android:title="@string/open_timeline_cont_desc"
             app:showAsAction="collapseActionView|ifRoom" />
         <item
             android:id="@+id/searchStatsMenu"
-            android:icon="@drawable/ic_search_white_24dp"
+            android:icon="@drawable/ic_timeline"
             android:orderInCategory="100"
             android:title="@string/search_by_usn"
+            android:visible="false"
             app:showAsAction="collapseActionView|ifRoom" />
     </group>
 </menu>

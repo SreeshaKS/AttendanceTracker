@@ -32,7 +32,7 @@
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
@@ -40,8 +40,8 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
@@ -50,17 +50,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/timeLineIVB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="end|top"
-                android:layout_margin="10dp"
-                android:contentDescription="@string/open_timeline_cont_desc"
-                android:src="@drawable/ic_timeline" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/profileImageCard"

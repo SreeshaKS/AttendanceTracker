@@ -43,7 +43,8 @@ import java.util.Date;
 public class DashBoard extends AppCompatActivity
         implements EventsFragment.OnFragmentInteractionListener
         , AttendanceFragment.OnFragmentInteractionListener
-        , StatisticsFragment.OnFragmentInteractionListener {
+        , StatisticsFragment.OnFragmentInteractionListener
+        , EventsRVAdapter.SelectionEventNotifier {
 
     ViewPager mViewPager;
     Adapter mAdapter;
@@ -196,10 +197,8 @@ public class DashBoard extends AppCompatActivity
         createEventDialog.show();
     }
 
-    ImageView mTimeLineIVB;
-
     private void initializeViewElements() {
-        mTimeLineIVB = (ImageView) findViewById(R.id.timeLineIVB);
+
         mAttendanceFragment = AttendanceFragment.newInstance(null, null);
         mStatisticsFragment = StatisticsFragment.newInstance(null, null);
         mEventsFragment = EventsFragment.newInstance(null, null);
@@ -212,12 +211,6 @@ public class DashBoard extends AppCompatActivity
     }
 
     private void initializeListeners() {
-        mTimeLineIVB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(DashBoard.this, TimelineActivity.class));
-            }
-        });
     }
 
     @Override
@@ -226,6 +219,7 @@ public class DashBoard extends AppCompatActivity
     }
 
     private void setupViewPager(ViewPager viewPager) {
+
         viewPager.setOffscreenPageLimit(0);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -271,6 +265,29 @@ public class DashBoard extends AppCompatActivity
         mTabLayout.getTabAt(1).select();
     }
 
+    @Override
+    public void OnSelectionEventTriggered(int count) {
+        if (countMenuItem != null) {
+            countMenuItem.setTitle(String.valueOf(count));
+        }
+    }
+
+    @Override
+    public void OnSelectionStateChanged(boolean isInSelectionMode) {
+        if (isInSelectionMode) {
+            shouldInflateSelectionMenu = true;
+            invalidateOptionsMenu();
+        } else {
+            shouldInflateSelectionMenu = false;
+            invalidateOptionsMenu();
+        }
+    }
+
+    @Override
+    public void OnSelectedDeleteRequestComplete() {
+
+    }
+
     class Adapter extends FragmentPagerAdapter {
         ArrayList<Fragment> fragmentsArrayList = new ArrayList<>();
         ArrayList<String> pageTitleArrayList = new ArrayList<>();
@@ -301,9 +318,21 @@ public class DashBoard extends AppCompatActivity
         }
     }
 
+
+    boolean shouldInflateSelectionMenu = false;
+    MenuItem countMenuItem;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        /*getMenuInflater().inflate(R.menu.menu_dash_board, menu);*/
+        if (!shouldInflateSelectionMenu) {
+            getMenuInflater().inflate(R.menu.menu_dash_board, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_attendance_selection, menu);
+            Log.d("MenuItem", "Size : " + menu.size());
+
+            countMenuItem = menu.findItem(R.id.countParticipantsMenu);
+
+        }
         return true;
     }
 
@@ -314,5 +343,21 @@ public class DashBoard extends AppCompatActivity
             Log.d("Menu", "Invalidating");
         }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.deleteParticipantsMenu: {
+                if (mEventsFragment != null)
+                    mEventsFragment.notifyAdapterOfSelectionDeleteRequest();
+                break;
+            }
+            case R.id.timeLineMenu: {
+                startActivity(new Intent(DashBoard.this, TimelineActivity.class));
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

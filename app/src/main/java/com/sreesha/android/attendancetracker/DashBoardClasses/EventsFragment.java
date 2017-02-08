@@ -73,11 +73,12 @@ public class EventsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (isStateRestored)
+        /*if (isStateRestored)
             getLoaderManager().initLoader(EVENTS_LOADER_ID, null, loaderCallBacks);
         else {
             getLoaderManager().restartLoader(EVENTS_LOADER_ID, null, loaderCallBacks);
-        }
+        }*/
+        getLoaderManager().restartLoader(EVENTS_LOADER_ID, null, loaderCallBacks);
     }
 
     @Override
@@ -115,12 +116,34 @@ public class EventsFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        mEventsAdapter.setCustomOnLongClickListener(new EventsRVAdapter.CustomOnLongClickListener() {
+        mEventsAdapter.registerSelectionEventNotifier(new AttendanceAdapter.SelectionEventNotifier() {
             @Override
-            public void onLongClick(View view, int position, Event attendanceEvent) {
-                //TODO : Inflate Appropriate toolbar menu items !
+            public void OnSelectionEventTriggered(int count) {
+                Context c = getActivity();
+                if (c instanceof DashBoard) {
+                    ((DashBoard) c).OnSelectionEventTriggered(count);
+                }
+            }
+
+            @Override
+            public void OnSelectionStateChanged(boolean isInSelectionMode) {
+                Context c = getActivity();
+                if (c instanceof DashBoard) {
+                    ((DashBoard) c).OnSelectionStateChanged(isInSelectionMode);
+                }
+            }
+
+            @Override
+            public void OnSelectedDeleteRequestComplete() {
+                getLoaderManager().restartLoader(EVENTS_LOADER_ID, null, loaderCallBacks);
             }
         });
+    }
+
+    public void notifyAdapterOfSelectionDeleteRequest() {
+        if (mEventsAdapter != null) {
+            mEventsAdapter.notifySelectionDeleteRequest(getActivity());
+        }
     }
 
     @Override
@@ -157,10 +180,10 @@ public class EventsFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            if (data .getCount()>0) {
+            if (data.getCount() > 0) {
                 mEmptyEventsIV.setVisibility(View.GONE);
                 Log.d("Loader", "onLoadFinished" + data.getCount());
-            }else {
+            } else {
                 mEmptyEventsIV.setVisibility(View.VISIBLE);
                 Log.d("Loader", "onLoadFinished : Null Data");
             }
