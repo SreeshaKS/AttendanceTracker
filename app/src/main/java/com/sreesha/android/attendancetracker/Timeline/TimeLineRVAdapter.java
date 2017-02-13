@@ -104,7 +104,8 @@ public class TimeLineRVAdapter extends RecyclerView.Adapter<TimeLineRVAdapter.Vi
         if (sH < nowCal.get(Calendar.HOUR)) {
             holder.addEventsCV.setVisibility(View.GONE);
         } else {
-            holder.addEventsCV.setVisibility(View.VISIBLE);
+            //TODO:UnComment when working on this feature
+            //holder.addEventsCV.setVisibility(View.VISIBLE);
         }
         Cursor c = db.query(
                 AttendanceContract.EventInstance.TABLE_EVENT_INSTANCE

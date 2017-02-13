@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/timeBarItemRootLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/timeBarItemRootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -42,6 +41,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginStart="60dp"
             android:layout_marginTop="10dp"
+            android:visibility="gone"
             app:cardBackgroundColor="@color/colorAccent"
             app:cardCornerRadius="15dp">
 

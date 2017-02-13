@@ -4,10 +4,15 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -19,7 +24,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.sreesha.android.attendancetracker.DashBoardClasses.DashBoard;
 import com.sreesha.android.attendancetracker.DataHandlers.AttendanceContract;
@@ -104,28 +111,29 @@ public class LoginActivity extends AppCompatActivity implements
                 });
     }
 
+    int isAdmin = 0;
+    CardView mContinueCV;
+    FirebaseUser user;
+    ToggleButton mAdminToggleButton;
+
     void proceedWithLoginActivity() {
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    //TODO:Write User to SQLite DataBase
-                    User u = new User(
-                            user.getUid()
-                            , user.getDisplayName()
-                            , user.getEmail()
-                            , 1
-                            , user.getPhotoUrl().toString()
-                    );
-                    getContentResolver()
-                            .insert(
-                                    AttendanceContract.Users.CONTENT_URI
-                                    , User.getContentValues(u)
-                            );
-                    startActivity(new Intent(LoginActivity.this, DashBoard.class));
-                    finish();
+                        user.getToken(true)
+                                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                                    public void onComplete(@NonNull Task<GetTokenResult> task) {
+                                        if (task.isSuccessful()) {
+                                            String idToken = task.getResult().getToken();
+                                            mContinueCV.setVisibility(View.VISIBLE);
+                                        } else {
+                                            // Handle error -> task.getException();
+                                        }
+                                    }
+                                });
                 } else {
                     // User is signed out
                     Log.d("FireBaseAuth", "onAuthStateChanged:signed_out");
@@ -143,6 +151,16 @@ public class LoginActivity extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         findViewById(R.id.sign_in_button).setOnClickListener(this);
+        mContinueCV = (CardView) findViewById(R.id.forwardProceedCardView);
+        mContinueCV.setVisibility(View.GONE);
+        mContinueCV.setOnClickListener(this);
+        mAdminToggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+        mAdminToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isAdmin = isChecked ? 0 : 1;
+            }
+        });
     }
 
     @Override
@@ -150,6 +168,48 @@ public class LoginActivity extends AppCompatActivity implements
         switch (view.getId()) {
             case R.id.sign_in_button:
                 signIn();
+                break;
+            case R.id.forwardProceedCardView:
+                String admin = LoginActivity.this.getString(R.string.switch_text_admin);
+                String attendee = LoginActivity.this.getString(R.string.switch_text_attendee);
+                new MaterialDialog.Builder(LoginActivity.this)
+                        .content(
+                                getString(R.string.logging_in_as)
+                                        +
+                                        (isAdmin == 1
+                                                ? admin
+                                                : attendee
+                                        )
+                        )
+                        .positiveText(R.string.agree_dialog_action)
+                        .negativeText(R.string.disagree_dialog_action)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                //TODO:Write User to SQLite DataBase
+
+                                User u = new User(
+                                        user.getUid()
+                                        , user.getDisplayName()
+                                        , user.getEmail()
+                                        , isAdmin
+                                        , user.getPhotoUrl().toString()
+                                );
+                                getContentResolver()
+                                        .insert(
+                                                AttendanceContract.Users.CONTENT_URI
+                                                , User.getContentValues(u)
+                                        );
+                                if (isAdmin == 1) {
+                                    startActivity(new Intent(LoginActivity.this, DashBoard.class));
+                                    finish();
+                                } else {
+                                    //TODO:Write Code for user Login
+                                }
+                            }
+                        })
+                        .show();
+
                 break;
         }
     }
