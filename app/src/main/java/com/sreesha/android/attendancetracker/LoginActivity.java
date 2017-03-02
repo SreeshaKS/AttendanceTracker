@@ -24,7 +24,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -111,7 +110,7 @@ public class LoginActivity extends AppCompatActivity implements
                 });
     }
 
-    int isAdmin = 0;
+    int isAdmin = 1;
     CardView mContinueCV;
     FirebaseUser user;
     ToggleButton mAdminToggleButton;
@@ -123,17 +122,18 @@ public class LoginActivity extends AppCompatActivity implements
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                        user.getToken(true)
-                                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                                    public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                        if (task.isSuccessful()) {
-                                            String idToken = task.getResult().getToken();
-                                            mContinueCV.setVisibility(View.VISIBLE);
-                                        } else {
-                                            // Handle error -> task.getException();
-                                        }
+                    user.getToken(true)
+                            .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                                    if (task.isSuccessful()) {
+                                        String idToken = task.getResult().getToken();
+                                        mContinueCV.setVisibility(View.VISIBLE);
+
+                                    } else {
+                                        // Handle error -> task.getException();
                                     }
-                                });
+                                }
+                            });
                 } else {
                     // User is signed out
                     Log.d("FireBaseAuth", "onAuthStateChanged:signed_out");
@@ -158,7 +158,8 @@ public class LoginActivity extends AppCompatActivity implements
         mAdminToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isAdmin = isChecked ? 0 : 1;
+                Log.d("isChecked", "Checked ? " + isChecked);
+                isAdmin = ((isChecked) ? 0 : 1);
             }
         });
     }
